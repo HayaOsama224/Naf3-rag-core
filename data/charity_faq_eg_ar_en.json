@@ -1,0 +1,1149 @@
+{
+  "meta": {
+    "created": "2025-11-03T09:49:30.671201Z",
+    "count": 100,
+    "language": "ar-eg,en"
+  },
+  "faqs": [
+    {
+      "id": "faq_001",
+      "question_ar": "ازاي اتبرع؟",
+      "answer_ar": "تقدر تتبرع من خلال التطبيق/الموقع باختيار الموسسة او الحالة، وتدخل المبلغ وطريقة الدفع (فيزا/محفظة). هيوصلك تاكيد فورا.",
+      "question_en": "How do I donate?",
+      "answer_en": "You can donate via the app/website by selecting an organization or case, entering the amount and payment method (card/wallet). You'll get instant confirmation.",
+      "tags": [
+        "donor",
+        "payments",
+        "getting_started"
+      ]
+    },
+    {
+      "id": "faq_002",
+      "question_ar": "ايه اقل مبلغ ينفع اتتبرع بيه؟",
+      "answer_ar": "الحد الادني للتبرع بيبدا من 5 جنيه، وبيختلف حسب الحملة او الحالة.",
+      "question_en": "What is the minimum donation amount?",
+      "answer_en": "The minimum donation is usually 5 EGP, depending on the campaign or case.",
+      "tags": [
+        "donor",
+        "payments",
+        "limits"
+      ]
+    },
+    {
+      "id": "faq_003",
+      "question_ar": "هل اقدر اختار الحالة اللي عايز اساعدها؟",
+      "answer_ar": "ايوه، تقدر تختار حالة بعينها وتشوف تفاصيلها وتقاريرها قبل الدفع.",
+      "question_en": "Can I choose a specific case to support?",
+      "answer_en": "Yes, you can pick a specific case and review its details and reports before donating.",
+      "tags": [
+        "donor",
+        "cases",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_004",
+      "question_ar": "ازاي اتاكد ان التبرع وصل لصاحبه؟",
+      "answer_ar": "بعد الدفع بتستلم ايصال، وكمان تقدر تتابع حالة الصرف وتقارير الموسسة من صفحة التتبع.",
+      "question_en": "How can I verify my donation reached the recipient?",
+      "answer_en": "You'll get a receipt after payment, and you can track disbursement and organization reports in the tracking page.",
+      "tags": [
+        "donor",
+        "tracking",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_005",
+      "question_ar": "هل التبرع امن علي الموقع؟",
+      "answer_ar": "احنا بنستخدم بوابات دفع امنة ومشفرة ومعتمدة. بياناتك محفوظة.",
+      "question_en": "Is donating on the website secure?",
+      "answer_en": "We use certified, encrypted payment gateways. Your data is protected.",
+      "tags": [
+        "donor",
+        "security",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_006",
+      "question_ar": "ينفع اتبرع بشكل شهري تلقايي؟",
+      "answer_ar": "ايوه، تقدر تفعل التبرع الشهري وتحدد اليوم والمبلغ، وتوصلك رسالة قبل الخصم.",
+      "question_en": "Can I schedule monthly donations?",
+      "answer_en": "Yes, you can enable monthly donations, set the date and amount, and you'll be notified before each charge.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_007",
+      "question_ar": "ازاي الغي التبرع الشهري؟",
+      "answer_ar": "من الاعدادات > التبرعات الدورية، اعمل ايقاف. هيوصلك تاكيد بالالغاء.",
+      "question_en": "How do I cancel a recurring donation?",
+      "answer_en": "Go to Settings > Recurring Donations and disable it. You'll receive a cancellation confirmation.",
+      "tags": [
+        "donor",
+        "recurring",
+        "account"
+      ]
+    },
+    {
+      "id": "faq_008",
+      "question_ar": "هل في رسوم علي التبرعات؟",
+      "answer_ar": "ممكن يكون في رسوم بسيطة للبوابة البنكية بنعرضها قبل التاكيد عشان تبقي واضحة.",
+      "question_en": "Are there any fees?",
+      "answer_en": "There may be small payment gateway fees, always shown before you confirm so it’s transparent.",
+      "tags": [
+        "donor",
+        "fees",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_009",
+      "question_ar": "اقدر اتبرع بدون انشاء حساب؟",
+      "answer_ar": "ينفع تتبرع كضيف، بس انشاء حساب بيوفر لك تتبع وايصالات وحفظ طرق الدفع.",
+      "question_en": "Can I donate without creating an account?",
+      "answer_en": "Guest donations are possible, but accounts enable tracking, receipts, and saved payment methods.",
+      "tags": [
+        "donor",
+        "account",
+        "tracking"
+      ]
+    },
+    {
+      "id": "faq_010",
+      "question_ar": "ينفع اخلي تبرعي مجهول؟",
+      "answer_ar": "ايوه، تقدر تختار وضع مجهول ومش هيظهر اسمك للعامة.",
+      "question_en": "Can I donate anonymously?",
+      "answer_en": "Yes, you can switch to anonymous mode and your name won’t be shown publicly.",
+      "tags": [
+        "donor",
+        "privacy"
+      ]
+    },
+    {
+      "id": "faq_011",
+      "question_ar": "هل اقدر اقسم التبرع علي اكتر من حالة؟",
+      "answer_ar": "تقدر تختار اكتر من حالة وتوزع المبلغ بينهم قبل الدفع.",
+      "question_en": "Can I split a donation across multiple cases?",
+      "answer_en": "You can pick multiple cases and allocate amounts before paying.",
+      "tags": [
+        "donor",
+        "cases",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_012",
+      "question_ar": "ازاي احمل ايصال التبرع؟",
+      "answer_ar": "من صفحة التبرعات، ادخل علي العملية واضغط تنزيل الايصال (PDF).",
+      "question_en": "How do I download my donation receipt?",
+      "answer_en": "From your Donations page, open the transaction and click Download Receipt (PDF).",
+      "tags": [
+        "donor",
+        "receipts"
+      ]
+    },
+    {
+      "id": "faq_013",
+      "question_ar": "هل في حملات موسمية زي رمضان او الشتاء؟",
+      "answer_ar": "ايوه، بنوفر حملات موسمية وبتلاقيها في صفحة الحملات.",
+      "question_en": "Do you have seasonal campaigns like Ramadan or Winter?",
+      "answer_en": "Yes, seasonal campaigns are available and highlighted on the Campaigns page.",
+      "tags": [
+        "donor",
+        "campaigns"
+      ]
+    },
+    {
+      "id": "faq_014",
+      "question_ar": "اقدر اتواصل مع الموسسة قبل ما اتتبرع؟",
+      "answer_ar": "طبعا، تقدر تبعت رسالة من صفحة الموسسة او تتصل بخدمة العملاء.",
+      "question_en": "Can I contact the charity before donating?",
+      "answer_en": "Yes, message them from their profile or contact customer support.",
+      "tags": [
+        "donor",
+        "support",
+        "communication"
+      ]
+    },
+    {
+      "id": "faq_015",
+      "question_ar": "ممكن اتبرع بحاجات عينية بدل فلوس؟",
+      "answer_ar": "حسب الحملة، في حملات بتقبل تبرعات عينية (ملابس/ادوية) مع تعليمات للتسليم.",
+      "question_en": "Can I donate items instead of money?",
+      "answer_en": "Some campaigns accept in-kind donations (clothes/medicines) with clear drop-off instructions.",
+      "tags": [
+        "donor",
+        "in_kind"
+      ]
+    },
+    {
+      "id": "faq_016",
+      "question_ar": "هل في حد اقصي للتبرع؟",
+      "answer_ar": "مفيش حد اقصي عام، لكن بعض الحملات بتحط سقف للتبرع حسب الحاجة.",
+      "question_en": "Is there a maximum donation?",
+      "answer_en": "No general cap, but specific campaigns may set reasonable limits.",
+      "tags": [
+        "donor",
+        "limits"
+      ]
+    },
+    {
+      "id": "faq_017",
+      "question_ar": "ازاي اعدل وسيلة الدفع؟",
+      "answer_ar": "من الحساب > طرق الدفع، تقدر تضيف/تحذف/تعدل وتختار الافتراضي.",
+      "question_en": "How do I update my payment method?",
+      "answer_en": "In Account > Payment Methods, add/remove/edit and set a default card/wallet.",
+      "tags": [
+        "donor",
+        "payments",
+        "account"
+      ]
+    },
+    {
+      "id": "faq_018",
+      "question_ar": "لو العملية فشلت اعمل ايه؟",
+      "answer_ar": "جرب طريقة دفع تانية او تواصل مع الدعم. لو حصل خصم من غير ايصال، بيتراجع تلقاييا خلال 48 ساعة غالبا.",
+      "question_en": "What if the payment fails?",
+      "answer_en": "Try another method or contact support. If charged without a receipt, it usually auto-refunds within 48h.",
+      "tags": [
+        "donor",
+        "payments",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_019",
+      "question_ar": "ازاي اتاكد ان الحالة حقيقية؟",
+      "answer_ar": "احنا بنراجع المستندات ونفعل التحقق، وكمان بنعرض تقارير المتابعة والتسليم.",
+      "question_en": "How do I know a case is legitimate?",
+      "answer_en": "We verify documents, enable case validation, and publish follow-up and delivery reports.",
+      "tags": [
+        "donor",
+        "fraud_prevention",
+        "verification"
+      ]
+    },
+    {
+      "id": "faq_020",
+      "question_ar": "ازاي اتابع اثر تبرعاتي؟",
+      "answer_ar": "صفحة التاثير بتعرض عدد الحالات المدعومة والتقارير والصور (لو متاحة).",
+      "question_en": "How can I see the impact of my donations?",
+      "answer_en": "The Impact page shows supported cases, reports, and photos when available.",
+      "tags": [
+        "donor",
+        "impact",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_021",
+      "question_ar": "هل التبرعات قابلة للاسترجاع؟",
+      "answer_ar": "بشكل عام التبرعات غير قابلة للاسترجاع بعد الصرف، لكن لو حصل خطا واضح بنتعامل معاه عبر الدعم.",
+      "question_en": "Are donations refundable?",
+      "answer_en": "Donations are generally non-refundable after disbursement, except for clear errors handled by support.",
+      "tags": [
+        "donor",
+        "refunds"
+      ]
+    },
+    {
+      "id": "faq_022",
+      "question_ar": "اقدر احدد مجال معين للتبرع (تعليم/صحة)؟",
+      "answer_ar": "طبعا، تقدر تختار المجال وتظهر لك الحالات المرتبطة بيه.",
+      "question_en": "Can I donate to a specific category (education/health)?",
+      "answer_en": "Yes, filter by category to see related cases.",
+      "tags": [
+        "donor",
+        "categories"
+      ]
+    },
+    {
+      "id": "faq_023",
+      "question_ar": "هل في تقارير سنوية للموسسات؟",
+      "answer_ar": "ايوه، هتلاقي التقارير السنوية ومدققة ان وجدت علي صفحة الموسسة.",
+      "question_en": "Do organizations have annual reports?",
+      "answer_en": "Yes, annual (and audited if available) reports are published on each organization's profile.",
+      "tags": [
+        "donor",
+        "reports",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_024",
+      "question_ar": "هل ممكن اعمل هدية تبرع باسم حد؟",
+      "answer_ar": "ايوه، تقدر تعمل تبرع كهدية وتبعت شهادة مخصصة بالايميل.",
+      "question_en": "Can I donate as a gift in someone’s name?",
+      "answer_en": "Yes, donate as a gift and send a personalized certificate by email.",
+      "tags": [
+        "donor",
+        "gifts"
+      ]
+    },
+    {
+      "id": "faq_025",
+      "question_ar": "لو نسيت كلمة السر؟",
+      "answer_ar": "استرجعها من 'نسيت كلمة السر' وهيجيلك كود علي الموبايل/الايميل.",
+      "question_en": "What if I forget my password?",
+      "answer_en": "Use 'Forgot Password' and you'll receive a code via SMS/email.",
+      "tags": [
+        "donor",
+        "account",
+        "security"
+      ]
+    },
+    {
+      "id": "faq_026",
+      "question_ar": "ازاي اغير اللغة بين عربي/انجليزي؟",
+      "answer_ar": "من الاعدادات، بدل اللغة وهتتطبق فورا.",
+      "question_en": "How do I switch between Arabic/English?",
+      "answer_en": "Switch language in Settings; it applies instantly.",
+      "tags": [
+        "donor",
+        "ux",
+        "language"
+      ]
+    },
+    {
+      "id": "faq_027",
+      "question_ar": "ازاي اوقف اشعارات الايميل؟",
+      "answer_ar": "من الاعدادات > الاشعارات، عطل اللي مش محتاجه.",
+      "question_en": "How do I disable email notifications?",
+      "answer_en": "Go to Settings > Notifications and toggle off what you don't need.",
+      "tags": [
+        "donor",
+        "notifications"
+      ]
+    },
+    {
+      "id": "faq_028",
+      "question_ar": "هل ممكن اتابع الحالات المفضلة؟",
+      "answer_ar": "ايوه، اعمل متابعة او اضافة للمفضلة وهتوصلك تحديثات.",
+      "question_en": "Can I follow favorite cases?",
+      "answer_en": "Yes, follow or favorite cases to get updates.",
+      "tags": [
+        "donor",
+        "favorites",
+        "tracking"
+      ]
+    },
+    {
+      "id": "faq_029",
+      "question_ar": "ازاي اقدم شكوي؟",
+      "answer_ar": "من مركز المساعدة قدم تذكرة، او كلمنا علي الخط الساخن.",
+      "question_en": "How do I submit a complaint?",
+      "answer_en": "Open a ticket in Help Center or call our hotline.",
+      "tags": [
+        "donor",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_030",
+      "question_ar": "هل بياناتي الشخصية محفوظة؟",
+      "answer_ar": "ملتزمين بحماية البيانات، وبنستخدم تشفير ومعايير امان دولية.",
+      "question_en": "Is my personal data protected?",
+      "answer_en": "We comply with data protection standards and use encryption.",
+      "tags": [
+        "donor",
+        "privacy",
+        "security"
+      ]
+    },
+    {
+      "id": "faq_031",
+      "question_ar": "هل في خصومات ضريبية علي التبرعات؟",
+      "answer_ar": "بيعتمد علي القوانين المحلية. هنوفر لك ايصالات مطابقة لوايح الضرايب ان امكن.",
+      "question_en": "Are donations tax-deductible?",
+      "answer_en": "Depends on local law. We provide compliant receipts when applicable.",
+      "tags": [
+        "donor",
+        "taxes"
+      ]
+    },
+    {
+      "id": "faq_032",
+      "question_ar": "ازاي اقدم طلب مساعدة؟",
+      "answer_ar": "انشي حساب، وبعدها من قسم الطلبات املا الاستمارة وارفع المستندات المطلوبة.",
+      "question_en": "How do I apply for assistance?",
+      "answer_en": "Create an account, then fill the request form and upload required documents.",
+      "tags": [
+        "recipient",
+        "onboarding"
+      ]
+    },
+    {
+      "id": "faq_033",
+      "question_ar": "ايه المستندات المطلوبة؟",
+      "answer_ar": "بتختلف حسب نوع الطلب (طبي/تعليمي/طواري)، غالبا بطاقة رقم قومي، فواتير/تقارير، واثبات محل السكن.",
+      "question_en": "What documents are required?",
+      "answer_en": "Depends on request type (medical/education/emergency): ID, bills/reports, and proof of residence.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_034",
+      "question_ar": "ازاي اتابع حالة طلبي؟",
+      "answer_ar": "من صفحة طلباتي هتلاقي الحالة: قيد المراجعة/مقبول/مرفوض مع سبب.",
+      "question_en": "How do I track my request?",
+      "answer_en": "In 'My Requests' you'll see: under review/approved/rejected, with reasons.",
+      "tags": [
+        "recipient",
+        "tracking"
+      ]
+    },
+    {
+      "id": "faq_035",
+      "question_ar": "لو اتطلب مني مستند زيادة؟",
+      "answer_ar": "هيوصلك اشعار بالمستند المطلوب. ادخل وعدله وارفع الملف الجديد.",
+      "question_en": "If additional documents are needed?",
+      "answer_en": "You'll be notified. Open the request, edit, and upload the new file.",
+      "tags": [
+        "recipient",
+        "documents",
+        "notifications"
+      ]
+    },
+    {
+      "id": "faq_036",
+      "question_ar": "ممكن اقدم لاحتياج تعليمي زي ادوات المدرسة؟",
+      "answer_ar": "ايوه، في نوع طلب للتعليم؛ ممكن دعم ادوات مدرسية، مصاريف، او زي مدرسي حسب الحالة.",
+      "question_en": "Can I apply for school supplies support?",
+      "answer_en": "Yes, use the Education request type; support may include supplies, fees, or uniforms.",
+      "tags": [
+        "recipient",
+        "education"
+      ]
+    },
+    {
+      "id": "faq_037",
+      "question_ar": "القرار بياخد قد ايه؟",
+      "answer_ar": "علي حسب نوع الطلب وحجم الضغط. بنحاول نرد خلال 7-14 يوم عمل.",
+      "question_en": "How long does a decision take?",
+      "answer_en": "Typically 7–14 business days, depending on the request and workload.",
+      "tags": [
+        "recipient",
+        "sla"
+      ]
+    },
+    {
+      "id": "faq_038",
+      "question_ar": "لو اترفض طلبي؟",
+      "answer_ar": "تقدر تشوف سبب الرفض وتعمل اعادة تقديم بعد استكمال النواقص.",
+      "question_en": "What if my request is rejected?",
+      "answer_en": "You can see the reason and resubmit after completing missing requirements.",
+      "tags": [
+        "recipient",
+        "appeals"
+      ]
+    },
+    {
+      "id": "faq_039",
+      "question_ar": "هل في مساعدات نقدية مباشرة؟",
+      "answer_ar": "بعض الحالات بتكون نقدية، وبعضها قسايم شراء او دفع مباشر لمقدم الخدمة.",
+      "question_en": "Is direct cash support available?",
+      "answer_en": "Some cases are cash, others are vouchers or direct vendor payments.",
+      "tags": [
+        "recipient",
+        "cash",
+        "vouchers"
+      ]
+    },
+    {
+      "id": "faq_040",
+      "question_ar": "اقدر اغير رقم الموبايل؟",
+      "answer_ar": "من الحساب > البيانات الشخصية، غير الرقم وهيجيلك كود تاكيد.",
+      "question_en": "Can I change my phone number?",
+      "answer_en": "Yes, in Account > Profile, then verify with a code.",
+      "tags": [
+        "recipient",
+        "account"
+      ]
+    },
+    {
+      "id": "faq_041",
+      "question_ar": "هل ينفع حد يقدم مكاني؟",
+      "answer_ar": "ممكن اضافة ممثل اسرة بموافقة وتوثيق مناسب زي بطاقة وقرابة.",
+      "question_en": "Can someone apply on my behalf?",
+      "answer_en": "A verified family representative can apply with proper documentation.",
+      "tags": [
+        "recipient",
+        "family",
+        "proxy"
+      ]
+    },
+    {
+      "id": "faq_042",
+      "question_ar": "الموقع بيدعم لغة ايه؟",
+      "answer_ar": "عربي وانجليزي، وتقدر تبدل من الاعدادات.",
+      "question_en": "What languages are supported?",
+      "answer_en": "Arabic and English; switch in Settings.",
+      "tags": [
+        "recipient",
+        "ux",
+        "language"
+      ]
+    },
+    {
+      "id": "faq_043",
+      "question_ar": "لو معنديش انترنت قوي؟",
+      "answer_ar": "تقدر ترفع المستندات بحجم صغير وامتدادات مقبولة، ولو انقطع الاتصال هتكمل لاحقا.",
+      "question_en": "What if my internet is weak?",
+      "answer_en": "Upload compressed docs; if disconnected, you can resume later.",
+      "tags": [
+        "recipient",
+        "ux",
+        "uploads"
+      ]
+    },
+    {
+      "id": "faq_044",
+      "question_ar": "ازاي اعرف ان الطلب اتصرف؟",
+      "answer_ar": "هيوصلك اشعار، وكمان بتظهر حركة الصرف وتاريخ الاستلام في صفحة الطلب.",
+      "question_en": "How will I know when support is disbursed?",
+      "answer_en": "You'll get a notification; disbursement history appears on your request page.",
+      "tags": [
+        "recipient",
+        "tracking",
+        "disbursement"
+      ]
+    },
+    {
+      "id": "faq_045",
+      "question_ar": "هل في اولوية لحالات الطواري؟",
+      "answer_ar": "ايوه، الطلبات المعلمة كطواري بتتاخد اولوية بعد التحقق.",
+      "question_en": "Are emergencies prioritized?",
+      "answer_en": "Yes, emergency requests are prioritized after verification.",
+      "tags": [
+        "recipient",
+        "priority",
+        "emergency"
+      ]
+    },
+    {
+      "id": "faq_046",
+      "question_ar": "ازاي اعدل بيانات الطلب؟",
+      "answer_ar": "طالما الطلب تحت المراجعة، تقدر تعمل تعديل وترفع ملفات جديدة.",
+      "question_en": "How do I edit my request?",
+      "answer_en": "While under review, you can edit details and upload new files.",
+      "tags": [
+        "recipient",
+        "editing"
+      ]
+    },
+    {
+      "id": "faq_047",
+      "question_ar": "لو نسيت كلمة السر؟",
+      "answer_ar": "استخدم 'نسيت كلمة السر' وهيجيلك كود علي الموبايل/الايميل.",
+      "question_en": "I forgot my password—what do I do?",
+      "answer_en": "Use 'Forgot Password' and verify with SMS/email.",
+      "tags": [
+        "recipient",
+        "security"
+      ]
+    },
+    {
+      "id": "faq_048",
+      "question_ar": "هل بياناتي امنة؟",
+      "answer_ar": "بنحمي بياناتك بمعايير الامان والتشفير، وندخل علي ملفاتك موظفين مخولين فقط.",
+      "question_en": "Is my data safe?",
+      "answer_en": "We use encryption and role-based access; only authorized staff can see your files.",
+      "tags": [
+        "recipient",
+        "privacy",
+        "security"
+      ]
+    },
+    {
+      "id": "faq_049",
+      "question_ar": "هل في زيارات ميدانية؟",
+      "answer_ar": "احيانا بنعمل زيارة للتحقق، وهننسق معاك قبلها.",
+      "question_en": "Are field visits required?",
+      "answer_en": "Sometimes yes for verification; we’ll schedule with you first.",
+      "tags": [
+        "recipient",
+        "verification"
+      ]
+    },
+    {
+      "id": "faq_050",
+      "question_ar": "المنحة التعليمية بتغطي ايه؟",
+      "answer_ar": "بتغطي حسب الحالة: مصاريف، كتب، ادوات، او دعم جزيي.",
+      "question_en": "What does the education grant cover?",
+      "answer_en": "Depending on your case: tuition, books, supplies, or partial support.",
+      "tags": [
+        "recipient",
+        "education",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_051",
+      "question_ar": "المساعدة الطبية بتغطي ايه؟",
+      "answer_ar": "ممكن تغطي ادوية، عمليات، جلسات علاج، او اجهزة طبية حسب التقارير.",
+      "question_en": "What does medical support cover?",
+      "answer_en": "It may cover medication, surgeries, therapy sessions, or medical devices as per reports.",
+      "tags": [
+        "recipient",
+        "medical",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_052",
+      "question_ar": "لو عندي مشكلة في الرفع؟",
+      "answer_ar": "غير نوع الملف لصيغة مدعومة وحاول تاني، ولو استمر تواصل مع الدعم.",
+      "question_en": "Upload keeps failing—what do I do?",
+      "answer_en": "Use supported formats and try again, or contact support.",
+      "tags": [
+        "recipient",
+        "uploads",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_053",
+      "question_ar": "هل في حد اقصي للمساعدة؟",
+      "answer_ar": "الحد الاقصي بيختلف حسب نوع الطلب والميزانية المتاحة.",
+      "question_en": "Is there a maximum support amount?",
+      "answer_en": "It varies by request type and available budget.",
+      "tags": [
+        "recipient",
+        "limits"
+      ]
+    },
+    {
+      "id": "faq_054",
+      "question_ar": "ينفع اقدم اكتر من طلب؟",
+      "answer_ar": "ممكن بس بنراجع التداخل، ومش بنسمح بازدواجية الدعم لنفس الحاجة.",
+      "question_en": "Can I submit multiple requests?",
+      "answer_en": "Yes, but we avoid overlapping support for the same need.",
+      "tags": [
+        "recipient",
+        "rules"
+      ]
+    },
+    {
+      "id": "faq_055",
+      "question_ar": "هل الدعم بيتاخر؟",
+      "answer_ar": "بنحاول نلتزم بالاطار الزمني، اي تاخير هنبلغك بيه.",
+      "question_en": "What if support is delayed?",
+      "answer_en": "We aim to meet timelines; you'll be informed of any delays.",
+      "tags": [
+        "recipient",
+        "sla"
+      ]
+    },
+    {
+      "id": "faq_056",
+      "question_ar": "ازاي اضيف افراد الاسرة؟",
+      "answer_ar": "من الحساب > الاسرة، اضف البيانات والمستندات المطلوبة.",
+      "question_en": "How do I add family members?",
+      "answer_en": "Go to Account > Family and provide required details and documents.",
+      "tags": [
+        "recipient",
+        "family"
+      ]
+    },
+    {
+      "id": "faq_057",
+      "question_ar": "هل في قسايم شراء بدل الفلوس؟",
+      "answer_ar": "ايوه، لبعض الحالات بنصدر كوبونات باستخدامها عند شركاينا.",
+      "question_en": "Are vouchers available instead of cash?",
+      "answer_en": "Yes, for some cases we issue store vouchers redeemable at partner shops.",
+      "tags": [
+        "recipient",
+        "vouchers"
+      ]
+    },
+    {
+      "id": "faq_058",
+      "question_ar": "لو اتغير عنواني؟",
+      "answer_ar": "حدث العنوان بالمستند الدال (ايصال/عقد) عشان التحقق.",
+      "question_en": "If my address changes?",
+      "answer_en": "Update your address with proof (bill/contract) for verification.",
+      "tags": [
+        "recipient",
+        "account",
+        "verification"
+      ]
+    },
+    {
+      "id": "faq_059",
+      "question_ar": "كيف اتواصل مع خدمة العملاء؟",
+      "answer_ar": "من مركز المساعدة او الخط الساخن الموحد، ومتاح واتساب احيانا.",
+      "question_en": "How do I contact customer service?",
+      "answer_en": "Use Help Center or the hotline; WhatsApp may be available.",
+      "tags": [
+        "recipient",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_060",
+      "question_ar": "هل في تفضيل جغرافي؟",
+      "answer_ar": "الاولوية حسب معايير الاحتياج، مش المكان فقط، لكن بنراعي البعد الجغرافي وقت التسليم.",
+      "question_en": "Is there geographic preference?",
+      "answer_en": "Priority is need-based, not location-only; we still consider logistics.",
+      "tags": [
+        "recipient",
+        "eligibility"
+      ]
+    },
+    {
+      "id": "faq_061",
+      "question_ar": "هل متاح كفالة ايتام؟",
+      "answer_ar": "ايوه في برامج كفالة شهرية وسنوية حسب اللايحة.",
+      "question_en": "Is orphan sponsorship available?",
+      "answer_en": "Yes, monthly and yearly sponsorship programs are available as per policy.",
+      "tags": [
+        "donor",
+        "sponsorship"
+      ]
+    },
+    {
+      "id": "faq_062",
+      "question_ar": "ازاي اتبرع في رمضان لسلة غذايية؟",
+      "answer_ar": "اختار حملة رمضان وحدد عدد السلال والمبلغ، وهيوصلك تقرير تسليم.",
+      "question_en": "How to donate Ramadan food baskets?",
+      "answer_en": "Select the Ramadan campaign, choose basket count and amount; you'll receive a delivery report.",
+      "tags": [
+        "donor",
+        "campaigns",
+        "ramadan"
+      ]
+    },
+    {
+      "id": "faq_063",
+      "question_ar": "هل في بطاطين للشتا؟",
+      "answer_ar": "في حملات شتوية للبطاطين والملابس ويتم التوزيع حسب الاولوية.",
+      "question_en": "Do you provide winter blankets?",
+      "answer_en": "Yes, winter campaigns supply blankets/clothes prioritized by need.",
+      "tags": [
+        "donor",
+        "recipient",
+        "winter"
+      ]
+    },
+    {
+      "id": "faq_064",
+      "question_ar": "ازاي اطلب جهاز لاب توب للدراسة؟",
+      "answer_ar": "قدم طلب تعليمي مع خطاب من الجامعة يوضح الاحتياج.",
+      "question_en": "How to request a laptop for study?",
+      "answer_en": "Submit an Education request with a university letter explaining the need.",
+      "tags": [
+        "recipient",
+        "education",
+        "devices"
+      ]
+    },
+    {
+      "id": "faq_065",
+      "question_ar": "هل في قروض حسنة صغيرة؟",
+      "answer_ar": "في برامج تمكين اقتصادي بمبالغ صغيرة بدون فوايد بعد دراسة الحالة.",
+      "question_en": "Are interest-free micro-loans available?",
+      "answer_en": "Some economic empowerment programs offer small, interest-free loans after assessment.",
+      "tags": [
+        "recipient",
+        "empowerment",
+        "loans"
+      ]
+    },
+    {
+      "id": "faq_066",
+      "question_ar": "ممكن اتبرع باسم شركة؟",
+      "answer_ar": "ايوه، في حسابات موسسية وتقارير مخصصة للشركات.",
+      "question_en": "Can a company donate?",
+      "answer_en": "Yes, corporate accounts and tailored reports are supported.",
+      "tags": [
+        "donor",
+        "corporate"
+      ]
+    },
+    {
+      "id": "faq_067",
+      "question_ar": "هل تقبلوا تبرع دولي بعملة اجنبية؟",
+      "answer_ar": "نعم، بنقبل عملات اجنبية عبر بوابات دفع معينة، والقيمة تحول للمستفيد بالجنيه.",
+      "question_en": "Do you accept international/foreign currency?",
+      "answer_en": "Yes, via supported gateways; disbursement converts to local currency.",
+      "tags": [
+        "donor",
+        "international"
+      ]
+    },
+    {
+      "id": "faq_068",
+      "question_ar": "ازاي اتاكد من توجيه التبرع لمجال معين؟",
+      "answer_ar": "اختر الفية (صحة/تعليم/سكن) والتبرع هيحجز للمشروعات داخل الفية.",
+      "question_en": "How to earmark donations to a sector?",
+      "answer_en": "Choose a category (Health/Education/Housing); funds are restricted within it.",
+      "tags": [
+        "donor",
+        "restrictions"
+      ]
+    },
+    {
+      "id": "faq_069",
+      "question_ar": "هل في تدريب مهني للمستفيدين؟",
+      "answer_ar": "بعض البرامج بتقدم تدريب وتشغيل بالتعاون مع شركاء.",
+      "question_en": "Is there vocational training for recipients?",
+      "answer_en": "Some programs provide training and job placement via partners.",
+      "tags": [
+        "recipient",
+        "empowerment",
+        "training"
+      ]
+    },
+    {
+      "id": "faq_070",
+      "question_ar": "ازاي اطلب علاج مزمن؟",
+      "answer_ar": "قدم طلب طبي مع تقرير حديث وروشتة معتمدة.",
+      "question_en": "How to request chronic treatment?",
+      "answer_en": "Submit a Medical request with a recent medical report and valid prescription.",
+      "tags": [
+        "recipient",
+        "medical"
+      ]
+    },
+    {
+      "id": "faq_071",
+      "question_ar": "لو عندي اعاقة سمعية/بصرية؟",
+      "answer_ar": "نوفر بدايل وصول ومساعدة في ملء الطلبات حسب الحاجة.",
+      "question_en": "Accessibility for hearing/visual impairment?",
+      "answer_en": "We provide accessibility options and assisted application support.",
+      "tags": [
+        "recipient",
+        "accessibility"
+      ]
+    },
+    {
+      "id": "faq_072",
+      "question_ar": "ازاي اشارك الحالة علي السوشيال؟",
+      "answer_ar": "من صفحة الحالة استخدم زر المشاركة لواتساب/فيسبوك.",
+      "question_en": "How to share a case on social media?",
+      "answer_en": "Use the Share button on the case page for WhatsApp/Facebook.",
+      "tags": [
+        "donor",
+        "advocacy"
+      ]
+    },
+    {
+      "id": "faq_073",
+      "question_ar": "هل في سقف يومي لعدد التبرعات؟",
+      "answer_ar": "ممكن لاعتبارات امان. هتظهر رسالة لو وصلت الحد اليومي.",
+      "question_en": "Is there a daily donation limit?",
+      "answer_en": "Security limits may apply; you'll see a notice when reached.",
+      "tags": [
+        "donor",
+        "security",
+        "limits"
+      ]
+    },
+    {
+      "id": "faq_074",
+      "question_ar": "ممكن استلم الدعم نقدا يد بيد؟",
+      "answer_ar": "عادة الصرف بيكون الكتروني او عبر شركاء لضمان الشفافية.",
+      "question_en": "Can I receive cash in hand?",
+      "answer_en": "Disbursements are typically electronic or via partners for transparency.",
+      "tags": [
+        "recipient",
+        "disbursement"
+      ]
+    },
+    {
+      "id": "faq_075",
+      "question_ar": "هل التبرعات تمتثل للشريعة؟",
+      "answer_ar": "نلتزم بمدونات سلوك وتوجيهات شرعية في حملات محددة عند الطلب.",
+      "question_en": "Are donations Sharia-compliant?",
+      "answer_en": "We follow codes of conduct and can offer Sharia-aligned options when requested.",
+      "tags": [
+        "donor",
+        "policy",
+        "religion"
+      ]
+    },
+    {
+      "id": "faq_076",
+      "question_ar": "ازاي اطلب ايجار سكن؟",
+      "answer_ar": "قدم طلب سكن باثبات عقد/انذار وعدم القدرة علي السداد.",
+      "question_en": "How to request rent support?",
+      "answer_en": "Submit a Housing request with lease/proof and inability to pay.",
+      "tags": [
+        "recipient",
+        "housing"
+      ]
+    },
+    {
+      "id": "faq_077",
+      "question_ar": "لو الحساب اتقفل؟",
+      "answer_ar": "تواصل مع الدعم للتحقق واعادة التفعيل بعد مراجعة الهوية.",
+      "question_en": "If my account is locked?",
+      "answer_en": "Contact support for ID verification and reactivation.",
+      "tags": [
+        "user",
+        "security"
+      ]
+    },
+    {
+      "id": "faq_078",
+      "question_ar": "هل في متابعة بعد الصرف؟",
+      "answer_ar": "بنطلب تقارير/فواتير للتاكد من الاستخدام الصحيح وننشر ملخصات.",
+      "question_en": "Is there post-disbursement follow-up?",
+      "answer_en": "We require reports/receipts to verify proper use and publish summaries.",
+      "tags": [
+        "donor",
+        "recipient",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_079",
+      "question_ar": "ازاي اقدم شكوي علي موسسة؟",
+      "answer_ar": "قدم شكوي من مركز المساعدة مع تفاصيل ووثايق داعمة.",
+      "question_en": "How to file a complaint against an organization?",
+      "answer_en": "Submit through Help Center with details and supporting documents.",
+      "tags": [
+        "donor",
+        "recipient",
+        "governance"
+      ]
+    },
+    {
+      "id": "faq_080",
+      "question_ar": "هل الاطفال الايتام ليهم اولوية؟",
+      "answer_ar": "الاولوية حسب تقييم الاحتياج، وبيندرج الايتام ضمن الفيات عالية الاولوية.",
+      "question_en": "Are orphans prioritized?",
+      "answer_en": "Prioritization is need-based; orphans are considered high-priority cases.",
+      "tags": [
+        "policy",
+        "eligibility"
+      ]
+    },
+    {
+      "id": "faq_081",
+      "question_ar": "هل في دعم التعليم؟",
+      "answer_ar": "ممكن، حسب نوع الطلب والتقييم.",
+      "question_en": "Is support available for التعليم?",
+      "answer_en": "Possibly, depending on request type and assessment.",
+      "tags": [
+        "recipient",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_082",
+      "question_ar": "ازاي اعرف متطلبات الصحة؟",
+      "answer_ar": "صفحة الطلب بتوضح المتطلبات بالتفصيل.",
+      "question_en": "How to know requirements for الصحة?",
+      "answer_en": "The request page lists detailed requirements.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_083",
+      "question_ar": "هل اقدر اعمل تبرع متكرر ل السكن؟",
+      "answer_ar": "ايوه، فعل التبرع الدوري وحدد الفية.",
+      "question_en": "Can I set recurring donations for السكن?",
+      "answer_en": "Yes, enable recurring and pick the category.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_084",
+      "question_ar": "هل في تقارير خاصة ب التغذية؟",
+      "answer_ar": "هتوصل تقارير دورية حسب اختياراتك.",
+      "question_en": "Are there reports specific to التغذية?",
+      "answer_en": "You'll receive periodic reports based on your preferences.",
+      "tags": [
+        "donor",
+        "reports"
+      ]
+    },
+    {
+      "id": "faq_085",
+      "question_ar": "هل في دعم الشتاء؟",
+      "answer_ar": "ممكن، حسب نوع الطلب والتقييم.",
+      "question_en": "Is support available for الشتاء?",
+      "answer_en": "Possibly, depending on request type and assessment.",
+      "tags": [
+        "recipient",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_086",
+      "question_ar": "ازاي اعرف متطلبات اللاجيين؟",
+      "answer_ar": "صفحة الطلب بتوضح المتطلبات بالتفصيل.",
+      "question_en": "How to know requirements for اللاجئين?",
+      "answer_en": "The request page lists detailed requirements.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_087",
+      "question_ar": "هل اقدر اعمل تبرع متكرر ل ذوي الهمم؟",
+      "answer_ar": "ايوه، فعل التبرع الدوري وحدد الفية.",
+      "question_en": "Can I set recurring donations for ذوي الهمم?",
+      "answer_en": "Yes, enable recurring and pick the category.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_088",
+      "question_ar": "هل في تقارير خاصة ب الادوية؟",
+      "answer_ar": "هتوصل تقارير دورية حسب اختياراتك.",
+      "question_en": "Are there reports specific to الأدوية?",
+      "answer_en": "You'll receive periodic reports based on your preferences.",
+      "tags": [
+        "donor",
+        "reports"
+      ]
+    },
+    {
+      "id": "faq_089",
+      "question_ar": "هل في دعم العمليات؟",
+      "answer_ar": "ممكن، حسب نوع الطلب والتقييم.",
+      "question_en": "Is support available for العمليات?",
+      "answer_en": "Possibly, depending on request type and assessment.",
+      "tags": [
+        "recipient",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_090",
+      "question_ar": "ازاي اعرف متطلبات الاجهزة الطبية؟",
+      "answer_ar": "صفحة الطلب بتوضح المتطلبات بالتفصيل.",
+      "question_en": "How to know requirements for الأجهزة الطبية?",
+      "answer_en": "The request page lists detailed requirements.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_091",
+      "question_ar": "هل اقدر اعمل تبرع متكرر ل التعليم؟",
+      "answer_ar": "ايوه، فعل التبرع الدوري وحدد الفية.",
+      "question_en": "Can I set recurring donations for التعليم?",
+      "answer_en": "Yes, enable recurring and pick the category.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_092",
+      "question_ar": "هل في تقارير خاصة ب الصحة؟",
+      "answer_ar": "هتوصل تقارير دورية حسب اختياراتك.",
+      "question_en": "Are there reports specific to الصحة?",
+      "answer_en": "You'll receive periodic reports based on your preferences.",
+      "tags": [
+        "donor",
+        "reports"
+      ]
+    },
+    {
+      "id": "faq_093",
+      "question_ar": "هل في دعم السكن؟",
+      "answer_ar": "ممكن، حسب نوع الطلب والتقييم.",
+      "question_en": "Is support available for السكن?",
+      "answer_en": "Possibly, depending on request type and assessment.",
+      "tags": [
+        "recipient",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_094",
+      "question_ar": "ازاي اعرف متطلبات التغذية؟",
+      "answer_ar": "صفحة الطلب بتوضح المتطلبات بالتفصيل.",
+      "question_en": "How to know requirements for التغذية?",
+      "answer_en": "The request page lists detailed requirements.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_095",
+      "question_ar": "هل اقدر اعمل تبرع متكرر ل الشتاء؟",
+      "answer_ar": "ايوه، فعل التبرع الدوري وحدد الفية.",
+      "question_en": "Can I set recurring donations for الشتاء?",
+      "answer_en": "Yes, enable recurring and pick the category.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_096",
+      "question_ar": "هل في تقارير خاصة ب اللاجيين؟",
+      "answer_ar": "هتوصل تقارير دورية حسب اختياراتك.",
+      "question_en": "Are there reports specific to اللاجئين?",
+      "answer_en": "You'll receive periodic reports based on your preferences.",
+      "tags": [
+        "donor",
+        "reports"
+      ]
+    },
+    {
+      "id": "faq_097",
+      "question_ar": "هل في دعم ذوي الهمم؟",
+      "answer_ar": "ممكن، حسب نوع الطلب والتقييم.",
+      "question_en": "Is support available for ذوي الهمم?",
+      "answer_en": "Possibly, depending on request type and assessment.",
+      "tags": [
+        "recipient",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_098",
+      "question_ar": "ازاي اعرف متطلبات الادوية؟",
+      "answer_ar": "صفحة الطلب بتوضح المتطلبات بالتفصيل.",
+      "question_en": "How to know requirements for الأدوية?",
+      "answer_en": "The request page lists detailed requirements.",
+      "tags": [
+        "recipient",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_099",
+      "question_ar": "هل اقدر اعمل تبرع متكرر ل العمليات؟",
+      "answer_ar": "ايوه، فعل التبرع الدوري وحدد الفية.",
+      "question_en": "Can I set recurring donations for العمليات?",
+      "answer_en": "Yes, enable recurring and pick the category.",
+      "tags": [
+        "donor",
+        "recurring"
+      ]
+    },
+    {
+      "id": "faq_100",
+      "question_ar": "هل في تقارير خاصة ب الاجهزة الطبية؟",
+      "answer_ar": "هتوصل تقارير دورية حسب اختياراتك.",
+      "question_en": "Are there reports specific to الأجهزة الطبية?",
+      "answer_en": "You'll receive periodic reports based on your preferences.",
+      "tags": [
+        "donor",
+        "reports"
+      ]
+    }
+  ]
+}

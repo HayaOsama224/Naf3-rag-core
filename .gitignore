@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# Artifacts generated at runtime
+artifacts/
+models/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
