@@ -27,7 +27,9 @@ app = FastAPI(
     description=description,
     version="1.0.0",
 )
-
+class HistoryTurn(BaseModel):
+    question: str
+    answer: str
 
 class AskRequest(BaseModel):
     """
@@ -35,6 +37,10 @@ class AskRequest(BaseModel):
     """
     question: str
     top_k: Optional[int] = None
+    # Optional short chat history (used only for resolving references)
+    # A list of {question, answer} pairs.
+    history: Optional[List["HistoryTurn"]] = None
+
 
 
 class Passage(BaseModel):
@@ -75,7 +81,16 @@ def ask(req: AskRequest):
     with a fixed insufficient-context message and sets `insufficient = true`.
     """
     k = req.top_k or TOP_K
-    answer, docs = answer_query(req.question, k)
+    history = None
+    if req.history:
+        history = []
+        for t in req.history:
+            if hasattr(t, "model_dump"):
+                history.append(t.model_dump())
+            else:
+                history.append(t.dict())
+
+    answer, docs = answer_query(req.question, k, history=history)
 
     lang = detect_lang(req.question or "")
     insufficient_flag = answer.strip() in {INSUFFICIENT_EN, INSUFFICIENT_AR}
@@ -84,5 +99,6 @@ def ask(req: AskRequest):
         answer=answer,
         insufficient=insufficient_flag,
         lang=lang,
-        passages=docs,
+        passages=docs
     )
+
