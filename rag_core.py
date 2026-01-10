@@ -436,55 +436,36 @@ def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
 # ===============================
 # Query rewrite (history-aware, no new facts)
 # ===============================
-def rewrite_query(question: str, paragraph_history: str) -> str:
-    """
-    General history-aware query rewrite with verification.
-    - Rewrites only if the question refers to something in history.
-    - Must not introduce new entities/topics not present in (question OR history).
-    - If cannot confidently rewrite, returns original question unchanged.
-    """
-    q = normalize_q(question)
-    h = normalize_q(paragraph_history)
+def rewrite_query(query: str, chat_context: str) -> str:
+    query = normalize_q(query)
+    chat_context = normalize_q(chat_context)
 
-    if not q or not h or LLM is None:
-        return q
+    if not query or not chat_context or LLM is None:
+        return query
 
-    lang = detect_lang(q or h)
+    lang = detect_lang(query or chat_context)
 
-    # ----------------------------
-    # 1) Rewrite candidate
-    # ----------------------------
     if lang == "ar":
-        sys_rewrite = (
-            "أعد صياغة سؤال المستخدم ليصبح واضحًا بذاته عند الحاجة.\n"
-            "إذا كان السؤال الجديد يشير إلى شيء في سجل المحادثة (ضمائر/إشارات/حذف)، "
-            "اكتب سؤالاً مستقلاً يذكر المقصود صراحة.\n\n"
-            "قواعد:\n"
-            "1) إذا كان السؤال لا يعتمد على السجل: أعد نفس السؤال دون تغيير.\n"
-            "2) ممنوع إدخال أي معلومات/كيانات/أسماء غير موجودة حرفيًا في (سؤال المستخدم أو سجل المحادثة).\n"
-            "3) اكتب سؤالاً واحدًا فقط بدون شرح."
+        prompt = (
+            f"بناءً على المحادثة السابقة:\n{chat_context}\n"
+            f"أعد صياغة السؤال التالي ليكون جملة بحث مستقلة (باللغة العربية فقط): {query}"
         )
-        user_rewrite = f"سجل المحادثة:\n{h}\n\nسؤال المستخدم:\n{q}\n\nالناتج (سؤال واحد فقط):"
     else:
-        sys_rewrite = (
-            "Rewrite the user's question to be self-contained only if needed.\n"
-            "If the question depends on the chat history (pronouns/deictic/ellipsis), "
-            "rewrite it to explicitly include the referenced item.\n\n"
-            "Rules:\n"
-            "1) If it does not depend on history: return the original question unchanged.\n"
-            "2) Do NOT introduce any entity/info that does not appear verbatim in (user question OR chat history).\n"
-            "3) Output exactly ONE question, no explanation."
+        prompt = (
+            f"Based on previous conversation:\n{chat_context}\n"
+            f"Rewrite this as a standalone search query (English only): {query}"
         )
-        user_rewrite = f"Chat history:\n{h}\n\nUser question:\n{q}\n\nOutput (one question only):"
 
-    candidate = llm_chat(
-        [{"role": "system", "content": sys_rewrite}, {"role": "user", "content": user_rewrite}],
-        max_tokens=96,
+    rewritten = llm_chat(
+        [{"role": "user", "content": prompt}],
+        max_tokens=64,
     )
-    candidate = normalize_q(candidate)
-    if not candidate:
-        return q
-    return candidate 
+
+    rewritten = normalize_q(rewritten)
+
+    # Safety fallback
+    return rewritten if rewritten else query
+
 # ===============================
 # History summarization (paragraph_history)
 # ===============================
@@ -637,5 +618,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
