@@ -1,66 +1,43 @@
-# Dockerfile (RunPod Serverless, CUDA 12.6, Python 3.12, FAISS-GPU, llama-cpp-python with CUDA)
-# - Starts RunPod serverless via handler.py
-# - Builds llama-cpp-python with GGML_CUDA enabled so n_gpu_layers can offload to GPU
-# - Uses faiss-gpu-cu12 for GPU vector search (optional via USE_FAISS_GPU=1)
-
-FROM nvidia/cuda:12.6.2-cudnn-runtime-ubuntu22.04
+# Dockerfile (RunPod Serverless) — CUDA 12.6 + Torch already included
+FROM pytorch/pytorch:2.9.0-cuda12.6-cudnn9-runtime
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_CACHE_DIR=1 \
-    # HuggingFace cache (good for RunPod persistent volumes)
+    TOKENIZERS_PARALLELISM=false \
     HF_HOME=/workspace/.cache/huggingface \
     TRANSFORMERS_CACHE=/workspace/.cache/huggingface \
     HUGGINGFACE_HUB_CACHE=/workspace/.cache/huggingface \
-    # Keep logs quieter
-    TOKENIZERS_PARALLELISM=false \
-    # llama-cpp-python: force CUDA build
+    # Build llama-cpp-python with CUDA support
     FORCE_CMAKE=1 \
     CMAKE_ARGS="-DGGML_CUDA=on"
 
-# ---- system deps ----
+WORKDIR /workspace
+
+# System deps for building llama-cpp-python (and general utilities)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    software-properties-common \
-    curl \
-    git \
     build-essential \
     cmake \
     pkg-config \
+    git \
+    curl \
     ca-certificates \
-    && add-apt-repository ppa:deadsnakes/ppa -y \
-    && apt-get update && apt-get install -y --no-install-recommends \
-    python3.12 \
-    python3.12-dev \
-    python3.12-venv \
-    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /workspace
-
-# (Optional) create folders your app expects
+# Create expected dirs
 RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
 
-# ---- install Python deps ----
-# Copy requirements first to leverage Docker layer caching
+# Install Python deps
 COPY requirements.txt /workspace/requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+ && pip install -r /workspace/requirements.txt
 
-# NOTE: We intentionally do NOT pin torch in requirements.txt.
-# But we DO need a CUDA-enabled torch in the image.
-# Install a CUDA 12.6 torch wheel (works with your torch 2.9.0+cu126 style setup).
-RUN python3.12 -m pip install --upgrade pip setuptools wheel \
- && python3.12 -m pip install --index-url https://download.pytorch.org/whl/cu126 \
-      torch torchvision torchaudio \
- && python3.12 -m pip install -r /workspace/requirements.txt
-
-# ---- copy app code ----
-# Make sure these exist in your build context:
-# - handler.py
-# - rag_core.py
-COPY handler.py /workspace/handler.py
+# Copy app
 COPY rag_core.py /workspace/rag_core.py
+COPY handler.py /workspace/handler.py
 
-# ---- runtime env defaults (override in RunPod template if you want) ----
+# Default env (override in RunPod template if you want)
 ENV DATA_DIR=/workspace/data \
     INDEX_PATH=/workspace/artifacts/faq.index \
     DOC_STORE_PATH=/workspace/artifacts/faq_docs.pkl \
@@ -71,5 +48,4 @@ ENV DATA_DIR=/workspace/data \
     N_CTX=4096 \
     TOP_K=5
 
-# RunPod Serverless: run handler
-CMD ["python3.12", "-u", "handler.py"]
+CMD ["python", "-u", "handler.py"]
