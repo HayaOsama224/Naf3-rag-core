@@ -1,80 +1,39 @@
 # handler.py
-import json
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-from typing import List, Dict, Any, Optional
+import runpod
+from rag_core import answer_query, TOP_K, detect_lang, INSUFFICIENT_EN, INSUFFICIENT_AR
 
-from rag_core import answer_query, make_citation
+def handler(event):
+    """
+    RunPod Serverless handler.
+    Expected input:
+      {
+        "input": {
+          "question": "...",
+          "top_k": 5,          # optional
+          "history": [         # optional
+            {"question": "...", "answer": "..."}
+          ]
+        }
+      }
+    """
+    inp = (event or {}).get("input") or {}
+    question = (inp.get("question") or "").strip()
+    if not question:
+        return {"error": "Missing 'question' in input"}
 
-app = FastAPI(title="Charity FAQ RAG API")
+    k = int(inp.get("top_k") or TOP_K)
+    history = inp.get("history")
 
+    answer, docs = answer_query(question, k, history=history)
 
-# ==============================
-# REQUEST / RESPONSE MODELS
-# ==============================
-class HistoryItem(BaseModel):
-    question: str
-    answer: str
+    lang = detect_lang(question)
+    insufficient = answer.strip() in {INSUFFICIENT_EN, INSUFFICIENT_AR}
 
+    return {
+        "answer": answer,
+        "insufficient": insufficient,
+        "lang": lang,
+        "passages": docs,
+    }
 
-class QueryRequest(BaseModel):
-    question: str
-    top_k: Optional[int] = None
-    history: Optional[List[HistoryItem]] = None
-
-
-class Passage(BaseModel):
-    faq_id: str
-    lang: str
-    question: str
-    answer: str
-    tags: List[str]
-    citation: str
-
-
-class QueryResponse(BaseModel):
-    answer: str
-    passages: List[Passage]
-
-
-# ==============================
-# API ENDPOINT
-# ==============================
-@app.post("/query", response_model=QueryResponse)
-async def query_faq(req: QueryRequest):
-    try:
-        # Convert history to plain dicts for rag_core
-        hist = [h.dict() for h in req.history] if req.history else None
-        top_k = req.top_k if req.top_k is not None else 5
-
-        answer, passages_raw = answer_query(req.question, top_k=top_k, history=hist)
-
-        # Format passages for response
-        passages = [
-            Passage(
-                faq_id=d.get("faq_id", "?"),
-                lang=d.get("lang", "en"),
-                question=d.get("question", ""),
-                answer=d.get("answer", ""),
-                tags=d.get("tags") or [],
-                citation=make_citation(d),
-            )
-            for d in passages_raw
-        ]
-
-        return QueryResponse(answer=answer, passages=passages)
-
-    except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"error": str(e), "answer": "", "passages": []},
-        )
-
-
-# ==============================
-# HEALTHCHECK ENDPOINT
-# ==============================
-@app.get("/health")
-async def healthcheck():
-    return {"status": "ok"}
+runpod.serverless.start({"handler": handler})
