@@ -10,7 +10,6 @@ sentence-transformers>=2.7.0
 faiss-gpu-cu12==1.13.2
 
 # --- llama.cpp bindings ---
-llama-cpp-python==0.3.16
 diskcache>=5.6.1
 
 # --- common deps (usually pulled automatically, but safe) ---
