@@ -1,9 +1,16 @@
+runpod==1.7.9
+
 fastapi
 uvicorn
 
 sentence-transformers==3.0.1
-faiss-cpu==1.8.0.post1
 langdetect==1.0.9
 huggingface_hub==0.24.5
 
-llama-cpp-python==0.2.90
+# Keep FAISS CPU for now (retrieval is fast; GPU FAISS is extra complexity)
+faiss-cpu==1.8.0.post1
+
+# llama-cpp-python will be compiled with CUDA in Dockerfile (see below)
+llama-cpp-python>=0.2.90
+
+torch
