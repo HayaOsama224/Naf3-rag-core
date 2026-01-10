@@ -1,39 +1,54 @@
 # handler.py
+import traceback
+import threading
 import runpod
-from rag_core import answer_query, TOP_K, detect_lang, INSUFFICIENT_EN, INSUFFICIENT_AR
+
+import rag_core
+
+# Protect llama-cpp calls (safe default for serverless concurrency)
+_INFER_LOCK = threading.Lock()
+
+# Optional: validate on cold start that core loaded
+_COLD_START_STATUS = {
+    "index_loaded": rag_core.INDEX is not None,
+    "embedder_loaded": rag_core.EMBEDDER is not None,
+    "llm_loaded": rag_core.LLM is not None,
+}
+
+def _extract_payload(event: dict) -> dict:
+    # RunPod usually sends {"input": {...}}
+    if isinstance(event, dict) and isinstance(event.get("input"), dict):
+        return event["input"]
+    return event if isinstance(event, dict) else {}
 
 def handler(event):
-    """
-    RunPod Serverless handler.
-    Expected input:
-      {
-        "input": {
-          "question": "...",
-          "top_k": 5,          # optional
-          "history": [         # optional
-            {"question": "...", "answer": "..."}
-          ]
+    try:
+        payload = _extract_payload(event)
+
+        question = payload.get("question", "") or ""
+        paragraph_history = payload.get("paragraph_history", "") or ""
+        top_k = int(payload.get("top_k", getattr(rag_core, "TOP_K", 5)))
+
+        # Optional: allow caller to ask for health
+        if payload.get("health") is True:
+            return {"health": "ok", **_COLD_START_STATUS}
+
+        # Lock around model inference for safety
+        with _INFER_LOCK:
+            result = rag_core.answer_with_json_io(
+                question=question,
+                paragraph_history=paragraph_history,
+                top_k=top_k,
+            )
+
+        # Return everything
+        return result
+
+    except Exception as e:
+        return {
+            "error": str(e),
+            "details": traceback.format_exc(),
+            "cold_start_status": _COLD_START_STATUS,
         }
-      }
-    """
-    inp = (event or {}).get("input") or {}
-    question = (inp.get("question") or "").strip()
-    if not question:
-        return {"error": "Missing 'question' in input"}
-
-    k = int(inp.get("top_k") or TOP_K)
-    history = inp.get("history")
-
-    answer, docs = answer_query(question, k, history=history)
-
-    lang = detect_lang(question)
-    insufficient = answer.strip() in {INSUFFICIENT_EN, INSUFFICIENT_AR}
-
-    return {
-        "answer": answer,
-        "insufficient": insufficient,
-        "lang": lang,
-        "passages": docs,
-    }
 
 runpod.serverless.start({"handler": handler})
