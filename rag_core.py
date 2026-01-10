@@ -438,54 +438,109 @@ def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
 # ===============================
 def rewrite_query(question: str, paragraph_history: str) -> str:
     """
-    Rewrite only to resolve pronouns/deictic references.
-    Must NOT introduce new nouns/entities/actions from history.
-    If cannot resolve safely, return original question unchanged.
+    General history-aware query rewrite with verification.
+    - Rewrites only if the question refers to something in history.
+    - Must not introduce new entities/topics not present in (question OR history).
+    - If cannot confidently rewrite, returns original question unchanged.
     """
-    question = normalize_q(question)
-    paragraph_history = normalize_q(paragraph_history)
+    q = normalize_q(question)
+    h = normalize_q(paragraph_history)
 
-    if not question or not paragraph_history or LLM is None:
-        return question
+    if not q or not h or LLM is None:
+        return q
 
-    lang = detect_lang(question or paragraph_history)
+    lang = detect_lang(q or h)
 
+    # ----------------------------
+    # 1) Rewrite candidate
+    # ----------------------------
     if lang == "ar":
-        sys = (
-            "مهمتك: إعادة صياغة سؤال المستخدم ليصبح واضحًا بذاته، ولكن فقط عبر حلّ الضمائر "
-            "والإشارات العامة مثل: (ده/دي/دول/هو/هي/هم/هذا/ذلك/هنا/هناك/كده/كدا/إلغيه/ألغيه). "
-            "\nقواعد صارمة:"
-            "\n1) استخدم سجل المحادثة فقط لمعرفة مرجع الضمير/الإشارة، وليس لاستخراج موضوع جديد."
-            "\n2) ممنوع إضافة أسماء خدمات/ميزات/مواضيع أو تفاصيل لم يذكرها المستخدم في السؤال نفسه."
-            "\n3) إذا كان السؤال لا يحتوي ضميرًا أو لا يمكن تحديد المرجع بثقة، أعد نفس السؤال بدون تغيير."
-            "\nأخرج السؤال النهائي فقط بدون شرح."
+        sys_rewrite = (
+            "أعد صياغة سؤال المستخدم ليصبح واضحًا بذاته عند الحاجة.\n"
+            "إذا كان السؤال الجديد يشير إلى شيء في سجل المحادثة (ضمائر/إشارات/حذف)، "
+            "اكتب سؤالاً مستقلاً يذكر المقصود صراحة.\n\n"
+            "قواعد:\n"
+            "1) إذا كان السؤال لا يعتمد على السجل: أعد نفس السؤال دون تغيير.\n"
+            "2) ممنوع إدخال أي معلومات/كيانات/أسماء غير موجودة حرفيًا في (سؤال المستخدم أو سجل المحادثة).\n"
+            "3) اكتب سؤالاً واحدًا فقط بدون شرح."
         )
-        user = (
-            f"سجل المحادثة (للمرجع فقط): {paragraph_history}\n\n"
-            f"سؤال المستخدم: {question}\n\n"
-            "أعد صياغة السؤال وفق القواعد:"
+        user_rewrite = f"سجل المحادثة:\n{h}\n\nسؤال المستخدم:\n{q}\n\nالناتج (سؤال واحد فقط):"
+    else:
+        sys_rewrite = (
+            "Rewrite the user's question to be self-contained only if needed.\n"
+            "If the question depends on the chat history (pronouns/deictic/ellipsis), "
+            "rewrite it to explicitly include the referenced item.\n\n"
+            "Rules:\n"
+            "1) If it does not depend on history: return the original question unchanged.\n"
+            "2) Do NOT introduce any entity/info that does not appear verbatim in (user question OR chat history).\n"
+            "3) Output exactly ONE question, no explanation."
+        )
+        user_rewrite = f"Chat history:\n{h}\n\nUser question:\n{q}\n\nOutput (one question only):"
+
+    candidate = llm_chat(
+        [{"role": "system", "content": sys_rewrite}, {"role": "user", "content": user_rewrite}],
+        max_tokens=96,
+    )
+    candidate = normalize_q(candidate)
+    if not candidate:
+        return q
+
+    # If model echoed original, accept quickly.
+    if candidate == q:
+        return q
+
+    # ----------------------------
+    # 2) Verifier: accept/reject candidate
+    # ----------------------------
+    if lang == "ar":
+        sys_verify = (
+            "تحقق من إعادة صياغة سؤال.\n"
+            "أجب بـ JSON فقط بالشكل:\n"
+            "{\"accept\": true/false, \"reason\": \"...\"}\n\n"
+            "معايير القبول:\n"
+            "1) السؤال المعاد صياغته مفهوم بذاته دون السجل.\n"
+            "2) نفس نية السؤال الأصلي.\n"
+            "3) لا يحتوي على كيانات/مواضيع جديدة غير موجودة حرفيًا في (السؤال الأصلي أو السجل).\n"
+            "إذا كان هناك شك، ارفض (accept=false)."
+        )
+        user_verify = (
+            f"السؤال الأصلي:\n{q}\n\n"
+            f"السجل:\n{h}\n\n"
+            f"السؤال المعاد صياغته:\n{candidate}\n\n"
+            "هل نقبل؟"
         )
     else:
-        sys = (
-            "Task: rewrite the user's question to be self-contained, BUT ONLY by resolving pronouns/deictic "
-            "references (e.g., it/that/this/there/they/one/cancel it)."
-            "\nStrict rules:"
-            "\n1) Use chat history ONLY to identify what a pronoun refers to."
-            "\n2) Do NOT introduce new nouns/entities/features/topics that are not explicitly mentioned in the question."
-            "\n3) If there is no pronoun/deictic reference OR you cannot resolve it with high confidence, return the original question unchanged."
-            "\nOutput ONLY the final rewritten question, no explanation."
+        sys_verify = (
+            "Verify a rewritten question.\n"
+            "Reply ONLY with JSON in the form:\n"
+            "{\"accept\": true/false, \"reason\": \"...\"}\n\n"
+            "Accept criteria:\n"
+            "1) Rewritten question is self-contained without history.\n"
+            "2) Same intent as original.\n"
+            "3) Does NOT introduce new entities/topics not present verbatim in (original question OR history).\n"
+            "If unsure, reject (accept=false)."
         )
-        user = (
-            f"Chat history (reference only): {paragraph_history}\n\n"
-            f"User question: {question}\n\n"
-            "Rewrite following the rules:"
+        user_verify = (
+            f"Original question:\n{q}\n\n"
+            f"History:\n{h}\n\n"
+            f"Rewritten question:\n{candidate}\n\n"
+            "Accept?"
         )
 
-    rewritten = llm_chat(
-        [{"role": "system", "content": sys}, {"role": "user", "content": user}],
+    verdict_raw = llm_chat(
+        [{"role": "system", "content": sys_verify}, {"role": "user", "content": user_verify}],
         max_tokens=80,
     )
-    rewritten = normalize_q(rewritten)
+    verdict_raw = (verdict_raw or "").strip()
+
+    # Parse JSON safely
+    try:
+        verdict = json.loads(verdict_raw)
+        accept = bool(verdict.get("accept", False))
+    except Exception:
+        accept = False
+
+    return candidate if accept else q
 
     # ---- Safety guard: if rewritten got much longer, likely it pulled topic from history ----
     # Allow small expansions, but block big “topic injection”.
@@ -648,3 +703,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
