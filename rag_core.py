@@ -15,6 +15,12 @@ from llama_cpp import Llama
 # ===============================
 # CONFIG
 # ===============================
+def _device():
+    try:
+        import torch
+        return "cuda" if torch.cuda.is_available() else "cpu"
+    except Exception:
+        return "cpu"
 DATA_DIR = os.getenv("DATA_DIR", "./data")
 INDEX_PATH = os.getenv("INDEX_PATH", "./artifacts/faq.index")
 DOC_STORE_PATH = os.getenv("DOC_STORE_PATH", "./artifacts/faq_docs.pkl")
@@ -194,7 +200,7 @@ def load_index():
             )
 
         print("[load_index] Building index from FAQ JSON...")
-        embedder = SentenceTransformer(EMBED_MODEL, device="cpu")
+        embedder = SentenceTransformer(EMBED_MODEL, device=_device)
         build_index(docs, embedder, INDEX_PATH, DOC_STORE_PATH)
 
     index = faiss.read_index(INDEX_PATH)
@@ -211,14 +217,14 @@ except Exception as e:
     INDEX, DOCS = None, []
 
 try:
-    EMBEDDER = SentenceTransformer(EMBED_MODEL, device="cpu")
+    EMBEDDER = SentenceTransformer(EMBED_MODEL, device=_device)
 except Exception as e:
     print("[init] Failed to load embedder:", e)
     EMBEDDER = None
 
 
 # ===============================
-# LLM (llama.cpp CPU) setup
+# LLM (llama.cpp) setup
 # ===============================
 
 def get_llm() -> Llama:
@@ -228,13 +234,20 @@ def get_llm() -> Llama:
         local_dir="./models",
         local_dir_use_symlinks=False,
     )
+
+    n_gpu_layers = int(os.getenv("N_GPU_LAYERS", "35"))  # tune per VRAM
+    n_batch = int(os.getenv("N_BATCH", "512"))
+
     return Llama(
         model_path=local_path,
         n_threads=max(2, os.cpu_count() or 2),
         n_ctx=N_CTX,
+        n_gpu_layers=n_gpu_layers,
+        n_batch=n_batch,
         chat_format="qwen",
         verbose=False,
     )
+
 
 
 try:
