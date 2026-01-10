@@ -38,6 +38,7 @@ RUN pip install --index-url https://pypi.org/simple \
 # Copy app
 COPY rag_core.py /workspace/rag_core.py
 COPY handler.py /workspace/handler.py
+COPY data/ /workspace/data/
 
 # Default env (override in RunPod template if you want)
 ENV DATA_DIR=/workspace/data \
