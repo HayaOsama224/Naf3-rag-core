@@ -27,12 +27,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Create expected dirs
 RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
-
 # Install Python deps
 COPY requirements.txt /workspace/requirements.txt
 RUN pip install --upgrade pip setuptools wheel \
  && pip install -r /workspace/requirements.txt
 
+RUN pip install --index-url https://pypi.org/simple \
+      --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu122 \
+      llama-cpp-python==0.3.16
 # Copy app
 COPY rag_core.py /workspace/rag_core.py
 COPY handler.py /workspace/handler.py
@@ -49,3 +51,4 @@ ENV DATA_DIR=/workspace/data \
     TOP_K=5
 
 CMD ["python", "-u", "handler.py"]
+
