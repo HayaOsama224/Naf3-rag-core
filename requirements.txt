@@ -1,13 +1,21 @@
-runpod==1.7.9
+# --- RunPod serverless ---
+runpod==1.7.13
 
-# web (optional; keeps your api.py working locally too)
-fastapi==0.112.0
-uvicorn==0.30.6
-pydantic==2.8.2
-
-# RAG
-sentence-transformers==3.0.1
-faiss-cpu==1.8.0.post1
+# --- Core RAG ---
 langdetect==1.0.9
-huggingface_hub==0.24.5
-numpy==1.26.4
+huggingface-hub>=0.23.0
+sentence-transformers>=2.7.0
+
+# --- FAISS GPU (CUDA 12) ---
+faiss-gpu-cu12==1.13.2
+
+# --- llama.cpp bindings ---
+llama-cpp-python==0.3.16
+diskcache>=5.6.1
+
+# --- common deps (usually pulled automatically, but safe) ---
+numpy>=1.26,<3
+
+
+transformers>=4.40.0
+accelerate>=0.30.0

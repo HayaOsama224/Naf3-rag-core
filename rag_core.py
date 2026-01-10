@@ -1,26 +1,64 @@
-# rag_core.py
+# rag_core.py  (FULL working GPU-compatible RAG core + query rewrite + JSON I/O + history summary)
+#
+# What this provides:
+# 1) GPU embeddings (SentenceTransformer) if CUDA is available
+# 2) GPU FAISS search if:
+#    - you installed faiss-gpu
+#    - and set USE_FAISS_GPU=1
+# 3) GPU LLM offload (llama-cpp-python) if your llama-cpp build supports CUDA and N_GPU_LAYERS>0
+#
+# Adds requested features:
+# - Input JSON file contains: {"question": "...", "paragraph_history": "..."}
+# - Output JSON contains: {"question": "...", "answer": "...", "paragraph_history": "..."}
+# - Query rewrite step using history paragraph (does NOT add facts; only makes question standalone)
+# - History summarizer: keeps a compact "paragraph_history" so it doesn’t grow forever
+#
+# Usage (example):
+#   python rag_core.py --in ./input.json --out ./output.json
+#
+# Env toggles:
+#   USE_FAISS_GPU=1           # move FAISS index to GPU (requires faiss-gpu)
+#   FAISS_GPU_DEVICE=0
+#   N_GPU_LAYERS=35           # llama.cpp layers to offload (requires CUDA build)
+#   N_BATCH=512
+#   TOP_K=5, N_CTX=4096, etc.
+
 import os
 import json
 import glob
 import pickle
 import re
-from typing import List, Dict, Any
+import argparse
+from typing import List, Dict, Any, Optional, Tuple
+import atexit
 
-import faiss
+
 from langdetect import detect
 from sentence_transformers import SentenceTransformer
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
 
+# -------------------------------
+# FAISS import (CPU or GPU build)
+# -------------------------------
+try:
+    import faiss  # faiss-cpu or faiss-gpu
+except Exception as e:
+    raise ImportError(
+        "FAISS import failed. Install either 'faiss-cpu' or 'faiss-gpu'. "
+        f"Original error: {e}"
+    )
+
 # ===============================
 # CONFIG
 # ===============================
-def _device():
+def _device() -> str:
     try:
         import torch
         return "cuda" if torch.cuda.is_available() else "cpu"
     except Exception:
         return "cpu"
+
 DATA_DIR = os.getenv("DATA_DIR", "./data")
 INDEX_PATH = os.getenv("INDEX_PATH", "./artifacts/faq.index")
 DOC_STORE_PATH = os.getenv("DOC_STORE_PATH", "./artifacts/faq_docs.pkl")
@@ -41,11 +79,21 @@ MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "160"))
 INSUFFICIENT_EN = "Insufficient FAQ context"
 INSUFFICIENT_AR = "لا توجد إجابة في الأسئلة الشائعة الحالية"
 
+# FAISS GPU toggle
+USE_FAISS_GPU = os.getenv("USE_FAISS_GPU", "0").strip() == "1"
+FAISS_GPU_DEVICE = int(os.getenv("FAISS_GPU_DEVICE", "0"))
+
+# llama.cpp offload controls
+N_GPU_LAYERS = int(os.getenv("N_GPU_LAYERS", "35"))  # set 0 to force CPU
+N_BATCH = int(os.getenv("N_BATCH", "512"))
+
+# History controls
+MAX_HISTORY_CHARS = int(os.getenv("MAX_HISTORY_CHARS", "900"))  # output paragraph_history limit
+
 # ===============================
 # HELPERS
 # ===============================
 AR_REGEX = re.compile(r"[\u0600-\u06FF]")
-
 
 def detect_lang(text: str) -> str:
     """Detect AR / EN with a simple Arabic-character shortcut."""
@@ -56,44 +104,35 @@ def detect_lang(text: str) -> str:
     except Exception:
         return "en"
 
-
 def normalize_q(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip()
 
-
 def make_citation(d: Dict[str, Any]) -> str:
-    """
-    Build a tiny citation string from FAQ id + first tag.
-    """
-    fid = d.get("id", "?")
+    fid = d.get("faq_id", d.get("id", "?"))
     tags = d.get("tags") or []
     tag = tags[0] if tags else ""
     return f"FAQ {fid}" + (f" — {tag}" if tag else "")
 
-
 def truncate_ctx(s: str, limit: int = MAX_CTX_CHARS) -> str:
     return s if len(s) <= limit else s[:limit] + "\n[...]"
 
+def _truncate_history_paragraph(s: str, limit: int = MAX_HISTORY_CHARS) -> str:
+    s = normalize_q(s)
+    if len(s) <= limit:
+        return s
+    # keep the most recent part (usually more relevant)
+    return "[...]" + s[-limit:]
 
 # ===============================
 # DATA LOADING & INDEXING
 # ===============================
-
 def load_faq_jsons(folder: str) -> List[Dict[str, Any]]:
     """
-    Load all *.json files under DATA_DIR, expecting the structure:
-
+    Load all *.json files under DATA_DIR, expecting:
     {
       "meta": {...},
       "faqs": [
-        {
-          "id": "...",
-          "question_ar": "...",
-          "answer_ar": "...",
-          "question_en": "...",
-          "answer_en": "...",
-          "tags": [...]
-        },
+        {"id": "...", "question_ar": "...", "answer_ar": "...", "question_en": "...", "answer_en": "...", "tags": [...]},
         ...
       ]
     }
@@ -150,48 +189,73 @@ def load_faq_jsons(folder: str) -> List[Dict[str, Any]]:
     print(f"Loaded {len(docs)} FAQ QA entries from {len(files)} file(s).")
     return docs
 
-
 def passages_text(d: Dict[str, Any]) -> str:
-    """Build the text we actually embed."""
+    """Text used for embedding (E5 passage format)."""
     q = d.get("question") or ""
     a = d.get("answer") or ""
     tags = d.get("tags") or []
     faq_id = d.get("faq_id", "?")
     base = f"Q: {q}\nA: {a}\nFAQ ID: {faq_id}\nTags: {', '.join(tags)}"
-    # e5-style prefix
     return "passage: " + base
 
+def _build_cpu_index(emb, dim: int):
+    # normalized vectors + IP search = cosine similarity
+    index = faiss.IndexFlatIP(dim)
+    index.add(emb)
+    return index
 
-def build_index(docs: List[Dict[str, Any]],
-                embedder: SentenceTransformer,
-                index_path: str,
-                doc_store_path: str):
+def _maybe_move_index_to_gpu(index_cpu):
+    if not USE_FAISS_GPU:
+        return index_cpu
+
+    has_gpu = hasattr(faiss, "StandardGpuResources") and hasattr(faiss, "index_cpu_to_gpu")
+    if not has_gpu:
+        print("[faiss] USE_FAISS_GPU=1 but this FAISS build has no GPU support. Using CPU index.")
+        return index_cpu
+
+    try:
+        res = faiss.StandardGpuResources()
+        index_gpu = faiss.index_cpu_to_gpu(res, FAISS_GPU_DEVICE, index_cpu)
+        print(f"[faiss] Moved index to GPU device {FAISS_GPU_DEVICE}.")
+        return index_gpu
+    except Exception as e:
+        print(f"[faiss] Failed to move index to GPU ({e}). Using CPU index.")
+        return index_cpu
+
+def build_index(
+    docs: List[Dict[str, Any]],
+    embedder: SentenceTransformer,
+    index_path: str,
+    doc_store_path: str,
+):
     if not docs:
         raise ValueError("No documents found to index.")
 
     texts = [passages_text(d) for d in docs]
     emb = embedder.encode(
-        texts, convert_to_numpy=True, show_progress_bar=True, batch_size=64
+        texts,
+        convert_to_numpy=True,
+        show_progress_bar=True,
+        batch_size=64,
+        normalize_embeddings=True,  # lets us skip faiss.normalize_L2
     )
-    faiss.normalize_L2(emb)
 
-    index = faiss.IndexFlatIP(embedder.get_sentence_embedding_dimension())
-    index.add(emb)
-    faiss.write_index(index, index_path)
+    dim = embedder.get_sentence_embedding_dimension()
+    index_cpu = _build_cpu_index(emb, dim)
+
+    # Save CPU index to disk (portable)
+    faiss.write_index(index_cpu, index_path)
 
     with open(doc_store_path, "wb") as f:
         pickle.dump(docs, f)
 
-    print(f"[build_index] Index built with {len(docs)} vectors.")
+    print(f"[build_index] Index built with {len(docs)} vectors. Saved to {index_path}")
 
-
-def load_index():
-    """
-    Load (or build) FAISS index and document store.
-    """
+def load_index() -> Tuple[Any, List[Dict[str, Any]]]:
     if not (os.path.exists(INDEX_PATH) and os.path.exists(DOC_STORE_PATH)):
         if not os.path.isdir(DATA_DIR):
             raise FileNotFoundError(f"DATA_DIR not found: {DATA_DIR}")
+
         docs = load_faq_jsons(DATA_DIR)
         if not docs:
             raise FileNotFoundError(
@@ -200,16 +264,25 @@ def load_index():
             )
 
         print("[load_index] Building index from FAQ JSON...")
-        embedder = SentenceTransformer(EMBED_MODEL, device=_device)
+        embedder = SentenceTransformer(EMBED_MODEL, device=_device())  # ✅ correct
         build_index(docs, embedder, INDEX_PATH, DOC_STORE_PATH)
 
-    index = faiss.read_index(INDEX_PATH)
+    # Load CPU index from disk, then optionally move to GPU
+    index_cpu = faiss.read_index(INDEX_PATH)
+    index = _maybe_move_index_to_gpu(index_cpu)
+
     with open(DOC_STORE_PATH, "rb") as f:
         docs = pickle.load(f)
+
     return index, docs
 
+# ===============================
+# Global initialization
+# ===============================
+INDEX, DOCS = None, []
+EMBEDDER = None
+LLM = None
 
-# Global initialization (for Spaces / long-lived server)
 try:
     INDEX, DOCS = load_index()
 except Exception as e:
@@ -217,11 +290,11 @@ except Exception as e:
     INDEX, DOCS = None, []
 
 try:
-    EMBEDDER = SentenceTransformer(EMBED_MODEL, device=_device)
+    EMBEDDER = SentenceTransformer(EMBED_MODEL, device=_device())  # ✅ correct
+    print(f"[init] Embedder device: {getattr(EMBEDDER, 'device', None)}")
 except Exception as e:
     print("[init] Failed to load embedder:", e)
     EMBEDDER = None
-
 
 # ===============================
 # LLM (llama.cpp) setup
@@ -232,46 +305,50 @@ def get_llm() -> Llama:
         repo_id=GGUF_REPO_ID,
         filename=GGUF_FILENAME,
         local_dir="./models",
-        local_dir_use_symlinks=False,
     )
-
-    n_gpu_layers = int(os.getenv("N_GPU_LAYERS", "35"))  # tune per VRAM
-    n_batch = int(os.getenv("N_BATCH", "512"))
 
     return Llama(
         model_path=local_path,
         n_threads=max(2, os.cpu_count() or 2),
         n_ctx=N_CTX,
-        n_gpu_layers=n_gpu_layers,
-        n_batch=n_batch,
+        n_gpu_layers=max(0, N_GPU_LAYERS),
+        n_batch=N_BATCH,
         chat_format="qwen",
-        verbose=False,
+        verbose=False,  # set True if you want GPU offload logs
     )
 
-
+def _safe_close_llm():
+    global LLM
+    try:
+        if LLM is not None:
+            # llama-cpp-python exposes .close()
+            LLM.close()
+    except Exception:
+        pass
+    finally:
+        LLM = None
 
 try:
     LLM = get_llm()
 except Exception as e:
     print("[init] Failed to init LLM:", e)
     LLM = None
-
+atexit.register(_safe_close_llm)   
 
 # ===============================
-# RETRIEVAL + GENERATION
+# Retrieval
 # ===============================
-
-def retrieve(query_text: str, top_k: int = TOP_K, lang_hint: str | None = None):
+def retrieve(query_text: str, top_k: int = TOP_K, lang_hint: Optional[str] = None):
     if EMBEDDER is None or INDEX is None:
         return []
 
     q_emb = EMBEDDER.encode(
         ["query: " + (query_text or "")],
         convert_to_numpy=True,
+        normalize_embeddings=True,
     )
-    faiss.normalize_L2(q_emb)
-    D, I = INDEX.search(q_emb, top_k * 2)  # pull extra, filter by language
 
+    _, I = INDEX.search(q_emb, top_k * 2)  # pull extra, filter by language
     lang = lang_hint or detect_lang(query_text or "")
 
     same_lang, others = [], []
@@ -286,29 +363,28 @@ def retrieve(query_text: str, top_k: int = TOP_K, lang_hint: str | None = None):
         out.extend(others[: top_k - len(out)])
     return out[:top_k]
 
-
-def build_messages(user_q: str, passages: List[Dict[str,Any]],history: list[Dict[str,Any]] | None = None):
+# ===============================
+# Prompt building for FAQ answering (STRICT)
+# ===============================
+def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict[str, str]]:
     lang = detect_lang(user_q or "")
 
     sys_en = (
         "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
-        "You may use the chat history ONLY to understand what the user refers to, "
-        "but do NOT treat history as a source of facts. "
         "If the requested information is NOT present verbatim in the context, "
-        f"reply EXACTLY: \"{INSUFFICIENT_EN}\". "
+        f'reply EXACTLY: "{INSUFFICIENT_EN}". '
         "Add short FAQ citations like (FAQ 012). Answer in the user's language."
     )
     sys_ar = (
         "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
-         "يمكنك استخدام سجل المحادثة فقط لفهم مرجع السؤال (مثل الضمائر)، لكن لا تعتبره مصدرًا للمعلومة."
-        f"إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: \"{INSUFFICIENT_AR}\". "
+        f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
         "أضف إشارة موجزة لرقم السؤال مثل (FAQ 012). أجب بلغة المستخدم."
     )
 
     sys = sys_ar if lang == "ar" else sys_en
 
     seen = set()
-    blocks =[] 
+    blocks = []
     for d in passages:
         key = (d.get("lang"), d.get("question"), d.get("answer"), d.get("faq_id"))
         if key in seen:
@@ -324,72 +400,251 @@ def build_messages(user_q: str, passages: List[Dict[str,Any]],history: list[Dict
             blocks.append(f"Q: {q}\nA: {a}\nSource: {cite}")
 
     ctx = truncate_ctx("\n\n---\n\n".join(blocks))
-    history_block = ""
-    if history:
-        # Keep it short to reduce prompt bloat
-        turns = []
-        for t in history[-6:]:
-            qh = (t.get("question") or "").strip()
-            ah = (t.get("answer") or "").strip()
-            if not qh or not ah:
-                continue
-            if lang == "ar":
-                turns.append(f"س: {qh}\nج: {ah}")
-            else:
-                turns.append(f"Q: {qh}\nA: {ah}")
-        if turns:
-            if lang == "ar":
-                history_block = "\n\nسجل المحادثة (للمرجع فقط):\n" + "\n\n".join(turns)
-            else:
-                history_block = "\n\nChat history (for reference only):\n" + "\n\n".join(turns)
+
     if lang == "ar":
         user = (
-            f"أجب في جملة أو جملتين فقط بالاعتماد على السياق التالي. "
-            f"إن لم يكن الجواب موجودًا في السياق فأجِب نصًا: \"{INSUFFICIENT_AR}\".\n\n"
-            f"السؤال: {user_q}{history_block}\n\nالسياق:\n{ctx}"
+            "أجب في جملة أو جملتين فقط بالاعتماد على السياق التالي. "
+            f'إن لم يكن الجواب موجودًا في السياق فأجِب نصًا: "{INSUFFICIENT_AR}".\n\n'
+            f"السؤال: {user_q}\n\nالسياق:\n{ctx}"
         )
     else:
         user = (
-            f"Answer in 1–2 sentences using ONLY the FAQ context below. "
-            f"If the answer isn’t in the context, reply EXACTLY: \"{INSUFFICIENT_EN}\".\n\n"
-            f"Question: {user_q}{history_block}\n\nContext:\n{ctx}"
+            "Answer in 1–2 sentences using ONLY the FAQ context below. "
+            f'If the answer isn’t in the context, reply EXACTLY: "{INSUFFICIENT_EN}".\n\n'
+            f"Question: {user_q}\n\nContext:\n{ctx}"
         )
 
     return [{"role": "system", "content": sys}, {"role": "user", "content": user}]
 
-
-def llm_generate(messages, max_new_tokens: int = MAX_NEW_TOKENS) -> str:
+def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
     if LLM is None:
-        return INSUFFICIENT_EN
+        # Don’t hallucinate: return insufficient
+        # caller can decide which language string to return
+        return ""
     out = LLM.create_chat_completion(
         messages=messages,
         temperature=0.0,
-        max_tokens=max_new_tokens,
+        max_tokens=max_tokens,
         repeat_penalty=1.15,
         stop=None,
     )
     try:
         return out["choices"][0]["message"]["content"].strip()
     except Exception:
-        return INSUFFICIENT_EN
+        return ""
 
+# ===============================
+# Query rewrite (history-aware, no new facts)
+# ===============================
+def rewrite_query(question: str, paragraph_history: str) -> str:
+    """
+    Rewrite only to resolve pronouns/deictic references.
+    Must NOT introduce new nouns/entities/actions from history.
+    If cannot resolve safely, return original question unchanged.
+    """
+    question = normalize_q(question)
+    paragraph_history = normalize_q(paragraph_history)
 
-def answer_query(user_q: str, top_k: int = TOP_K, history: list["Dict"] | None = None):
+    if not question or not paragraph_history or LLM is None:
+        return question
+
+    lang = detect_lang(question or paragraph_history)
+
+    if lang == "ar":
+        sys = (
+            "مهمتك: إعادة صياغة سؤال المستخدم ليصبح واضحًا بذاته، ولكن فقط عبر حلّ الضمائر "
+            "والإشارات العامة مثل: (ده/دي/دول/هو/هي/هم/هذا/ذلك/هنا/هناك/كده/كدا/إلغيه/ألغيه). "
+            "\nقواعد صارمة:"
+            "\n1) استخدم سجل المحادثة فقط لمعرفة مرجع الضمير/الإشارة، وليس لاستخراج موضوع جديد."
+            "\n2) ممنوع إضافة أسماء خدمات/ميزات/مواضيع أو تفاصيل لم يذكرها المستخدم في السؤال نفسه."
+            "\n3) إذا كان السؤال لا يحتوي ضميرًا أو لا يمكن تحديد المرجع بثقة، أعد نفس السؤال بدون تغيير."
+            "\nأخرج السؤال النهائي فقط بدون شرح."
+        )
+        user = (
+            f"سجل المحادثة (للمرجع فقط): {paragraph_history}\n\n"
+            f"سؤال المستخدم: {question}\n\n"
+            "أعد صياغة السؤال وفق القواعد:"
+        )
+    else:
+        sys = (
+            "Task: rewrite the user's question to be self-contained, BUT ONLY by resolving pronouns/deictic "
+            "references (e.g., it/that/this/there/they/one/cancel it)."
+            "\nStrict rules:"
+            "\n1) Use chat history ONLY to identify what a pronoun refers to."
+            "\n2) Do NOT introduce new nouns/entities/features/topics that are not explicitly mentioned in the question."
+            "\n3) If there is no pronoun/deictic reference OR you cannot resolve it with high confidence, return the original question unchanged."
+            "\nOutput ONLY the final rewritten question, no explanation."
+        )
+        user = (
+            f"Chat history (reference only): {paragraph_history}\n\n"
+            f"User question: {question}\n\n"
+            "Rewrite following the rules:"
+        )
+
+    rewritten = llm_chat(
+        [{"role": "system", "content": sys}, {"role": "user", "content": user}],
+        max_tokens=80,
+    )
+    rewritten = normalize_q(rewritten)
+
+    # ---- Safety guard: if rewritten got much longer, likely it pulled topic from history ----
+    # Allow small expansions, but block big “topic injection”.
+    if not rewritten:
+        return question
+
+    if len(rewritten) > max(30, int(len(question) * 1.6)):
+        # too much added; safer to keep original
+        return question
+    return rewritten 
+# ===============================
+# History summarization (paragraph_history)
+# ===============================
+def summarize_history_so_far(paragraph_history: str, new_question: str, new_answer: str) -> str:
     """
-    Main entrypoint: given a user question, returns (answer, passages).
+    Append new Q/A to paragraph_history.
+    If it becomes too long, compress the older part into a short summary,
+    while keeping the most recent tail verbatim.
     """
+    paragraph_history = normalize_q(paragraph_history)
+    new_question = normalize_q(new_question)
+    new_answer = normalize_q(new_answer)
+
+    if not new_question and not new_answer:
+        return _truncate_history_paragraph(paragraph_history)
+
+    # 1) Always append the new turn (verbatim-ish)
+    lang = detect_lang(new_question or new_answer or paragraph_history)
+    if lang == "ar":
+        new_turn = f"س: {new_question} ج: {new_answer}"
+    else:
+        new_turn = f"Q: {new_question} A: {new_answer}"
+
+    merged = (paragraph_history + " " + new_turn).strip() if paragraph_history else new_turn
+
+    # 2) If short enough, keep as-is
+    if len(merged) <= MAX_HISTORY_CHARS:
+        return merged
+
+    # 3) Too long → compress older part and keep recent tail
+    # Keep last ~60% verbatim, summarize the rest
+    keep_tail_len = max(250, int(MAX_HISTORY_CHARS * 0.6))
+    tail = merged[-keep_tail_len:]
+    head = merged[:-keep_tail_len].strip()
+
+    # If no LLM, just hard-truncate head
+    if LLM is None or not head:
+        return _truncate_history_paragraph("[...]" + tail, limit=MAX_HISTORY_CHARS)
+
+    # LLM-based compression of the older head
+    if lang == "ar":
+        sys = (
+            "لخّص الجزء القديم من سجل المحادثة في جملة أو جملتين فقط دون إضافة أي معلومات جديدة. "
+            "احتفظ فقط بالنقاط المهمة التي تساعد على فهم المرجع لاحقاً."
+        )
+        user = (
+            f"الجزء القديم:\n{head}\n\n"
+            "اكتب ملخصاً قصيراً جداً لهذا الجزء:"
+        )
+    else:
+        sys = (
+            "Summarize the older part of the chat history into 1–2 sentences without adding new facts. "
+            "Keep only what helps resolve references later."
+        )
+        user = (
+            f"Older part:\n{head}\n\n"
+            "Write a very short summary of this older part:"
+        )
+
+    head_summary = llm_chat(
+        [{"role": "system", "content": sys}, {"role": "user", "content": user}],
+        max_tokens=140,
+    )
+    head_summary = normalize_q(head_summary) or ""
+
+    # 4) Compose compressed history + recent tail
+    if head_summary:
+        out = f"{head_summary} [...] {tail}"
+    else:
+        out = f"[...] {tail}"
+
+    return _truncate_history_paragraph(out, limit=MAX_HISTORY_CHARS)
+
+# ===============================
+# Main answering entrypoint (JSON-in / JSON-out style)
+# ===============================
+def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_K) -> Dict[str, str]:
+    """
+    Input:
+      - question: user question
+      - paragraph_history: a compact paragraph describing the history so far
+
+    Output:
+      - question: original question (unchanged)
+      - answer: model answer (strictly from FAQ context)
+      - paragraph_history: updated compact history paragraph
+    """
+    question = normalize_q(question)
+    paragraph_history = normalize_q(paragraph_history)
+
+    lang = detect_lang(question or paragraph_history)
+
     if INDEX is None or EMBEDDER is None or LLM is None:
-        lang = detect_lang(user_q or "")
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-        return msg, []
+        updated_history = summarize_history_so_far(paragraph_history, question, msg)
+        return {"question": question, "answer": msg, "paragraph_history": updated_history}
 
-    lang = detect_lang(user_q or "")
-    passages = retrieve(user_q, top_k=top_k, lang_hint=lang)
+    # 1) Rewrite query using history paragraph (standalone question)
+    rewritten_q = rewrite_query(question, paragraph_history)
 
+    # 2) Retrieve using rewritten query
+    passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
     if not passages:
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-        return msg, []
+        updated_history = summarize_history_so_far(paragraph_history, question, msg)
+        return {"question": question, "answer": msg, "paragraph_history": updated_history}
 
-    msgs = build_messages(user_q, passages,history=history)
-    resp = llm_generate(msgs)
-    return resp, passages
+    # 3) Generate strict FAQ answer
+    msgs = build_faq_messages(rewritten_q, passages)
+    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip()
+
+    if not answer:
+        answer = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
+
+    # 4) Update paragraph history summary with the ORIGINAL question + produced answer
+    updated_history = summarize_history_so_far(paragraph_history, question, answer)
+
+    return {"question": question, "answer": answer, "paragraph_history": updated_history}
+
+# ===============================
+# File helpers (JSON input/output)
+# ===============================
+def read_input_json(path: str) -> Dict[str, Any]:
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise ValueError("Input JSON must be an object/dict.")
+    return data
+
+def write_output_json(path: str, data: Dict[str, Any]) -> None:
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+# ===============================
+# CLI
+# ===============================
+def main():
+    parser = argparse.ArgumentParser(description="GPU-compatible FAQ RAG with query rewrite + history summary")
+    parser.add_argument("--in", dest="in_path", required=True, help="Path to input JSON file")
+    parser.add_argument("--out", dest="out_path", required=True, help="Path to output JSON file")
+    parser.add_argument("--topk", dest="topk", type=int, default=TOP_K, help="Top-K passages")
+    args = parser.parse_args()
+
+    inp = read_input_json(args.in_path)
+    question = inp.get("question", "")
+    paragraph_history = inp.get("paragraph_history", "")
+
+    result = answer_with_json_io(question=question, paragraph_history=paragraph_history, top_k=args.topk)
+    write_output_json(args.out_path, result)
+
+if __name__ == "__main__":
+    main()
