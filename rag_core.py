@@ -484,73 +484,7 @@ def rewrite_query(question: str, paragraph_history: str) -> str:
     candidate = normalize_q(candidate)
     if not candidate:
         return q
-
-    # If model echoed original, accept quickly.
-    if candidate == q:
-        return q
-
-    # ----------------------------
-    # 2) Verifier: accept/reject candidate
-    # ----------------------------
-    if lang == "ar":
-        sys_verify = (
-            "تحقق من إعادة صياغة سؤال.\n"
-            "أجب بـ JSON فقط بالشكل:\n"
-            "{\"accept\": true/false, \"reason\": \"...\"}\n\n"
-            "معايير القبول:\n"
-            "1) السؤال المعاد صياغته مفهوم بذاته دون السجل.\n"
-            "2) نفس نية السؤال الأصلي.\n"
-            "3) لا يحتوي على كيانات/مواضيع جديدة غير موجودة حرفيًا في (السؤال الأصلي أو السجل).\n"
-            "إذا كان هناك شك، ارفض (accept=false)."
-        )
-        user_verify = (
-            f"السؤال الأصلي:\n{q}\n\n"
-            f"السجل:\n{h}\n\n"
-            f"السؤال المعاد صياغته:\n{candidate}\n\n"
-            "هل نقبل؟"
-        )
-    else:
-        sys_verify = (
-            "Verify a rewritten question.\n"
-            "Reply ONLY with JSON in the form:\n"
-            "{\"accept\": true/false, \"reason\": \"...\"}\n\n"
-            "Accept criteria:\n"
-            "1) Rewritten question is self-contained without history.\n"
-            "2) Same intent as original.\n"
-            "3) Does NOT introduce new entities/topics not present verbatim in (original question OR history).\n"
-            "If unsure, reject (accept=false)."
-        )
-        user_verify = (
-            f"Original question:\n{q}\n\n"
-            f"History:\n{h}\n\n"
-            f"Rewritten question:\n{candidate}\n\n"
-            "Accept?"
-        )
-
-    verdict_raw = llm_chat(
-        [{"role": "system", "content": sys_verify}, {"role": "user", "content": user_verify}],
-        max_tokens=80,
-    )
-    verdict_raw = (verdict_raw or "").strip()
-
-    # Parse JSON safely
-    try:
-        verdict = json.loads(verdict_raw)
-        accept = bool(verdict.get("accept", False))
-    except Exception:
-        accept = False
-
-    return candidate if accept else q
-
-    # ---- Safety guard: if rewritten got much longer, likely it pulled topic from history ----
-    # Allow small expansions, but block big “topic injection”.
-    if not rewritten:
-        return question
-
-    if len(rewritten) > max(30, int(len(question) * 1.6)):
-        # too much added; safer to keep original
-        return question
-    return rewritten 
+    return candidate 
 # ===============================
 # History summarization (paragraph_history)
 # ===============================
@@ -655,8 +589,8 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
     passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
     if not passages:
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-        updated_history = summarize_history_so_far(paragraph_history, question, msg)
-        return {"question": question, "answer": msg, "paragraph_history": updated_history}
+        updated_history = summarize_history_so_far(paragraph_history, rewritten_q, msg)
+        return {"question": rewritten_q, "answer": msg, "paragraph_history": updated_history}
 
     # 3) Generate strict FAQ answer
     msgs = build_faq_messages(rewritten_q, passages)
@@ -666,9 +600,9 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
         answer = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
 
     # 4) Update paragraph history summary with the ORIGINAL question + produced answer
-    updated_history = summarize_history_so_far(paragraph_history, question, answer)
+    updated_history = summarize_history_so_far(paragraph_history, rewritten_q, answer)
 
-    return {"question": question, "answer": answer, "paragraph_history": updated_history}
+    return {"question": rewritten_q, "answer": answer, "paragraph_history": updated_history}
 
 # ===============================
 # File helpers (JSON input/output)
@@ -703,4 +637,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
