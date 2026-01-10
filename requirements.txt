@@ -1,16 +1,13 @@
 runpod==1.7.9
 
-fastapi
-uvicorn
+# web (optional; keeps your api.py working locally too)
+fastapi==0.112.0
+uvicorn==0.30.6
+pydantic==2.8.2
 
+# RAG
 sentence-transformers==3.0.1
+faiss-cpu==1.8.0.post1
 langdetect==1.0.9
 huggingface_hub==0.24.5
-
-# Keep FAISS CPU for now (retrieval is fast; GPU FAISS is extra complexity)
-faiss-cpu==1.8.0.post1
-
-# llama-cpp-python will be compiled with CUDA in Dockerfile (see below)
-llama-cpp-python>=0.2.90
-
-torch
+numpy==1.26.4
