@@ -446,30 +446,18 @@ def rewrite_query(query: str, chat_context: str) -> str:
     lang = detect_lang(query or chat_context)
 
     if lang == "ar":
-        prompt = (
-            f"المحادثة السابقة موجودة فقط للمساعدة في حالة كان السؤال غير واضح أو غامض.\n{chat_context}\n"
-            f"أعد صياغة السؤال التالي بحيث يكون جملة بحث مستقلة وواضحة قدر الإمكان، "
-            f"لكن لا تغيّر أي جزء من السؤال إذا كان واضحًا ومحدّدًا بالفعل. "
-            f"الهدف هو تحسين الوضوح فقط دون حذف أو إضافة معلومات جديدة: {query}"
+        rewritten =  (
+            f"المحادثة السابقة موجودة فقط للمساعدة إذا كان السؤال الحالي غير واضح أو غامض:\n{chat_context}\n"
+            f"أجب عن السؤال التالي بدقة وكاملة المعلومات المتاحة، وحاول الإجابة على كل جزء من السؤال الجديد. "
+            f"لا تعيد الإجابات السابقة حرفيًا إلا إذا كانت مطلوبة، وحافظ على الوضوح والمعلومات الجديدة: {query}"
         )
     else:
-        prompt = (
-            f"The previous conversation is provided only to help clarify the query if it is vague or ambiguous:\n{chat_context}\n"
-            f"Rewrite the following as a clear, standalone search query **only if it needs clarification**. "
-            f"Do not change any part of the query if it is already clear and specific. "
-            f"Your goal is to improve clarity while preserving the original intent: {query}"
+        rewritten = (
+            f"The previous conversation is provided only to help clarify the current question if it is vague or ambiguous:\n{chat_context}\n"
+            f"Answer the following question as accurately and completely as possible, addressing all parts of the new question. "
+            f"Do not repeat previous answers word-for-word unless necessary, and preserve clarity while providing any new information available: {query}"
         )
-
-
-    rewritten = llm_chat(
-        [{"role": "user", "content": prompt}],
-        max_tokens=64,
-    )
-
-    rewritten = normalize_q(rewritten)
-
-    # Safety fallback
-    return rewritten if rewritten else query
+    return rewritten 
 
 # ===============================
 # History summarization (paragraph_history)
@@ -623,6 +611,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
