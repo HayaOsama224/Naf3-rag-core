@@ -446,18 +446,60 @@ def rewrite_query(query: str, chat_context: str) -> str:
     lang = detect_lang(query or chat_context)
 
     if lang == "ar":
-        rewritten =  (
-            f"المحادثة السابقة موجودة فقط للمساعدة إذا كان السؤال الحالي غير واضح أو غامض:\n{chat_context}\n"
-            f"أجب عن السؤال التالي بدقة وكاملة المعلومات المتاحة، وحاول الإجابة على كل جزء من السؤال الجديد. "
-            f"لا تعيد الإجابات السابقة حرفيًا إلا إذا كانت مطلوبة، وحافظ على الوضوح والمعلومات الجديدة: {query}"
-        )
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "مهمتك فقط إعادة صياغة السؤال إذا كان غامضًا.\n"
+                    "❗ القواعد الصارمة:\n"
+                    "- أعد كتابة السؤال فقط، بدون شرح أو تعليمات.\n"
+                    "- لا تجب على السؤال.\n"
+                    "- لا تضف معلومات جديدة.\n"
+                    "- إذا كان السؤال واضحًا بالفعل، أعده كما هو حرفيًا.\n"
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"المحادثة السابقة (للمرجع فقط):\n{chat_context}\n\n"
+                    f"السؤال الحالي:\n{query}\n\n"
+                    "اكتب السؤال النهائي فقط:"
+                ),
+            },
+        ]
     else:
-        rewritten = (
-            f"The previous conversation is provided only to help clarify the current question if it is vague or ambiguous:\n{chat_context}\n"
-            f"Answer the following question as accurately and completely as possible, addressing all parts of the new question. "
-            f"Do not repeat previous answers word-for-word unless necessary, and preserve clarity while providing any new information available: {query}"
-        )
-    return rewritten 
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "Your task is ONLY to rewrite the question if it is ambiguous.\n"
+                    "STRICT RULES:\n"
+                    "- Output ONLY the rewritten question.\n"
+                    "- Do NOT answer the question.\n"
+                    "- Do NOT add explanations or instructions.\n"
+                    "- Do NOT add new information.\n"
+                    "- If the question is already clear, return it verbatim.\n"
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Previous conversation (reference only):\n{chat_context}\n\n"
+                    f"Current question:\n{query}\n\n"
+                    "Write the final question only:"
+                ),
+            },
+        ]
+
+    rewritten = llm_chat(messages, max_tokens=64)
+    rewritten = normalize_q(rewritten)
+
+    # HARD SAFETY: fallback if model misbehaves
+    if not rewritten or len(rewritten) > 300:
+        return query
+
+    return rewritten
+
 
 # ===============================
 # History summarization (paragraph_history)
@@ -611,6 +653,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
