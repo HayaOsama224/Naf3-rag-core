@@ -447,14 +447,19 @@ def rewrite_query(query: str, chat_context: str) -> str:
 
     if lang == "ar":
         prompt = (
-            f"بناءً على المحادثة السابقة:\n{chat_context}\n"
-            f"أعد صياغة السؤال التالي ليكون جملة بحث مستقلة (باللغة العربية فقط): {query}"
+            f"المحادثة السابقة موجودة فقط للمساعدة في حالة كان السؤال غير واضح أو غامض.\n{chat_context}\n"
+            f"أعد صياغة السؤال التالي بحيث يكون جملة بحث مستقلة وواضحة قدر الإمكان، "
+            f"لكن لا تغيّر أي جزء من السؤال إذا كان واضحًا ومحدّدًا بالفعل. "
+            f"الهدف هو تحسين الوضوح فقط دون حذف أو إضافة معلومات جديدة: {query}"
         )
     else:
         prompt = (
-            f"Based on previous conversation:\n{chat_context}\n"
-            f"Rewrite this as a standalone search query (English only): {query}"
+            f"The previous conversation is provided only to help clarify the query if it is vague or ambiguous:\n{chat_context}\n"
+            f"Rewrite the following as a clear, standalone search query **only if it needs clarification**. "
+            f"Do not change any part of the query if it is already clear and specific. "
+            f"Your goal is to improve clarity while preserving the original intent: {query}"
         )
+
 
     rewritten = llm_chat(
         [{"role": "user", "content": prompt}],
@@ -618,6 +623,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
