@@ -598,27 +598,44 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
         updated_history = summarize_history_so_far(paragraph_history, question, msg)
         return {"question": question, "answer": msg, "paragraph_history": updated_history}
 
-    # 1) Rewrite query using history paragraph (standalone question)
-    rewritten_q = rewrite_query(question, paragraph_history)
-
-    # 2) Retrieve using rewritten query
-    passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
+    
+    # 1) Try retrieval with original question
+    used_q = question
+    passages = retrieve(question, top_k=top_k, lang_hint=lang)
+    
+    # 2) Fallback: rewrite ONLY if no passages
+    if not passages and paragraph_history:
+        rewritten_q = normalize_q(rewrite_query(question, paragraph_history))
+    
+        # Retry only if rewrite actually changed something
+        if rewritten_q and rewritten_q != question:
+            passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
+            if passages:
+                used_q = rewritten_q
+    
+    # 3) If still nothing found → insufficient
     if not passages:
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-        updated_history = summarize_history_so_far(paragraph_history, rewritten_q, msg)
-        return {"question": rewritten_q, "answer": msg, "paragraph_history": updated_history}
-
-    # 3) Generate strict FAQ answer
-    msgs = build_faq_messages(rewritten_q, passages)
-    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip()
-
-    if not answer:
-        answer = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-
-    # 4) Update paragraph history summary with the ORIGINAL question + produced answer
-    updated_history = summarize_history_so_far(paragraph_history, rewritten_q, answer)
-
-    return {"question": rewritten_q, "answer": answer, "paragraph_history": updated_history}
+        updated_history = summarize_history_so_far(paragraph_history, used_q, msg)
+        return {
+            "question": used_q,
+            "answer": msg,
+            "paragraph_history": updated_history,
+        }
+    
+    # 4) Otherwise continue with answering
+    msgs = build_faq_messages(used_q, passages)
+    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip() or (
+        INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
+    )
+    
+    updated_history = summarize_history_so_far(paragraph_history, used_q, answer)
+    
+    return {
+        "question": used_q,
+        "answer": answer,
+        "paragraph_history": updated_history,
+    }
 
 # ===============================
 # File helpers (JSON input/output)
@@ -653,6 +670,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
