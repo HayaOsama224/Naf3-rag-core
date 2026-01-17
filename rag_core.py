@@ -67,8 +67,11 @@ os.makedirs(ARTIFACT_DIR, exist_ok=True)
 
 EMBED_MODEL = os.getenv("EMBED_MODEL", "intfloat/multilingual-e5-base")
 
-GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen2.5-3B-Instruct-GGUF")
-GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen2.5-3b-instruct-q4_k_m.gguf")
+# GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen2.5-3B-Instruct-GGUF")
+# GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen2.5-3b-instruct-q4_k_m.gguf")
+
+GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen-7B-Instruct-GGUF")
+GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen-7b-instruct-q4_k_m.gguf")
 
 TOP_K = int(os.getenv("TOP_K", "5"))
 MAX_CTX_CHARS = int(os.getenv("MAX_CTX_CHARS", "4000"))
@@ -306,7 +309,6 @@ def get_llm() -> Llama:
         filename=GGUF_FILENAME,
         local_dir="./models",
     )
-
     return Llama(
         model_path=local_path,
         n_threads=max(2, os.cpu_count() or 2),
@@ -494,11 +496,11 @@ def rewrite_query(query: str, chat_context: str) -> str:
 
     rewritten = llm_chat(messages, max_tokens=64)
     rewritten = normalize_q(rewritten)
-
     # HARD SAFETY: fallback if model misbehaves
-    if not rewritten or len(rewritten) > 300:
+    if not rewritten or len(rewritten) > 1000:
         return query
 
+    print(rewritten)
     return rewritten
 
 
@@ -671,6 +673,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
