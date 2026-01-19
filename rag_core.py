@@ -370,15 +370,17 @@ def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict
     lang = detect_lang(user_q or "")
 
     sys_en = (
-        "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
+        "You are Naf3 Charity FAQ Assistant. Write a clear answer ONLY using the provided FAQ context. "
         "If the requested information is NOT present verbatim in the context, "
         f'reply EXACTLY: "{INSUFFICIENT_EN}". '
         "Add short FAQ citations like (FAQ 012). Answer in the user's language."
+        "Write all the answer of the picked questions and don't stop with the citations only."
     )
     sys_ar = (
-        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
+        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. اكتب اجابه كامله وواضحه فقط من السياق المقدم. "
         f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
         "أضف إشارة موجزة لرقم السؤال مثل (FAQ 012). أجب بلغة المستخدم."
+        "وضح الاجابه بشكل كامل ولا تكتفي برقم السؤال فقط أبدا"
     )
 
     sys = sys_ar if lang == "ar" else sys_en
@@ -726,4 +728,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
