@@ -67,12 +67,8 @@ os.makedirs(ARTIFACT_DIR, exist_ok=True)
 
 EMBED_MODEL = os.getenv("EMBED_MODEL", "intfloat/multilingual-e5-base")
 
-# GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen2.5-3B-Instruct-GGUF")
-# GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen2.5-3b-instruct-q4_k_m.gguf")
-
-GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen3-1.7B-GGUF")
-GGUF_FILENAME = os.getenv("GGUF_FILENAME", "Qwen3-1.7B-Q8_0.gguf")
-
+GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen2.5-3B-Instruct-GGUF")
+GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen2.5-3b-instruct-q4_k_m.gguf")
 
 TOP_K = int(os.getenv("TOP_K", "5"))
 MAX_CTX_CHARS = int(os.getenv("MAX_CTX_CHARS", "4000"))
@@ -310,6 +306,7 @@ def get_llm() -> Llama:
         filename=GGUF_FILENAME,
         local_dir="./models",
     )
+
     return Llama(
         model_path=local_path,
         n_threads=max(2, os.cpu_count() or 2),
@@ -372,49 +369,16 @@ def retrieve(query_text: str, top_k: int = TOP_K, lang_hint: Optional[str] = Non
 def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict[str, str]]:
     lang = detect_lang(user_q or "")
 
-    # sys_en = (
-    #     "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
-    #     "If the requested information is NOT present verbatim in the context, "
-    #     f'reply EXACTLY: "{INSUFFICIENT_EN}". '
-    #     "Add short FAQ citations like (FAQ 012). Answer in the user's language."
-    # )
-    # sys_ar = (
-    #     "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
-    #     "قدم إجابة كاملة ومفيدة تساعد المستخدم فعليًا على فهم ما يريد معرفته. "
-    #     f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
-    #     "أضف إشارة موجزة لرقم السؤال مثل (FAQ 012). أجب بلغة المستخدم."
-    # )
-    sys_ar = (
-        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية.\n\n"
-        "قواعدك:\n"
-        "1) أجب فقط من السياق المقدم الخاص بالأسئلة الشائعة.\n"
-        "2) إذا كانت الإجابة موجودة نصيًا، أجب بجملة أو جملتين واضحة ومفيدة، وضع إشارة FAQ مثل (FAQ 007).\n"
-        "3) إذا كان السؤال متعلقًا بموضوع مذكور جزئيًا في السياق، قدم معلومة قصيرة تساعد المستخدم على الفهم.\n"
-        "4) إذا كان السؤال غامض أو غير واضح، اسأل المستخدم بلطف لتوضيح السؤال.\n"
-        "5) استخدم كامل تاريخ المحادثة لحل أي إشارات سابقة.\n"
-        "6) إذا لم يكن السؤال مرتبطًا بالعمل الخيري أو بالمنصة، أجب نصيًا: \"لا توجد إجابة في الأسئلة الشائعة الحالية\".\n"
-        "7) لا تضف معلومات جديدة خارج السياق، ولا تكتب خطوات داخلية أو <think>.\n\n"
-        "8) اجب بالعربي فقط اجابات واضحه وصريحه بدون اي لغات اخري"
-        "السياق:\n{retrieved_passages}\n\n"
-        "تاريخ المحادثة:\n{paragraph_history}\n\n"
-        "السؤال الحالي:\n{user_question}\n\n"
-        "الإجابة:"
-    )
     sys_en = (
-        "You are Naf3 Charity FAQ Assistant.\n\n"
-        "Rules:\n"
-        "1) Answer only using the provided FAQ context.\n"
-        "2) If the answer exists verbatim, provide a clear 1–2 sentence answer and cite the FAQ like (FAQ 007).\n"
-        "3) If the question relates to a topic partially mentioned in the context, provide a short helpful explanation.\n"
-        "4) If the question is ambiguous or unclear, politely ask the user to clarify.\n"
-        "5) Use the full chat history to resolve any references.\n"
-        "6) If the question is unrelated to charity or the platform, reply exactly: 'Insufficient FAQ context'.\n"
-        "7) Do not add new information outside the context, do not include internal steps or <think>.\n\n"
-        "8) You can only answer in English without using any other languages."
-        "Context:\n{retrieved_passages}\n\n"
-        "Chat history:\n{paragraph_history}\n\n"
-        "Current question:\n{user_question}\n\n"
-        "Answer:"
+        "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
+        "If the requested information is NOT present verbatim in the context, "
+        f'reply EXACTLY: "{INSUFFICIENT_EN}". '
+        "Add short FAQ citations like (FAQ 012). Answer in the user's language."
+    )
+    sys_ar = (
+        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
+        f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
+        "أضف إشارة موجزة لرقم السؤال مثل (FAQ 012). أجب بلغة المستخدم."
     )
 
     sys = sys_ar if lang == "ar" else sys_en
@@ -472,70 +436,129 @@ def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
 # ===============================
 # Query rewrite (history-aware, no new facts)
 # ===============================
-def rewrite_query(query: str, chat_context: str) -> str:
-    query = normalize_q(query)
-    chat_context = normalize_q(chat_context)
+import json
+import re
+from typing import Optional, Dict, Any
 
-    if not query or not chat_context or LLM is None:
-        return query
+JSON_OBJ_RE = re.compile(r"\{.*\}", re.DOTALL)
 
-    lang = detect_lang(query or chat_context)
+def _extract_json_obj(text: str) -> Optional[Dict[str, Any]]:
+    if not text:
+        return None
+    m = JSON_OBJ_RE.search(text)
+    if not m:
+        return None
+    try:
+        return json.loads(m.group(0))
+    except Exception:
+        return None
+
+def rewrite_query(question: str, paragraph_history: str) -> str:
+    """
+    LLM decides if question depends on history.
+    But it must provide evidence (verbatim substring from history),
+    and code verifies it to prevent injection/hallucination.
+    """
+    question = normalize_q(question)
+    paragraph_history = normalize_q(paragraph_history)
+
+    if not question or not paragraph_history or LLM is None:
+        return question
+
+    lang = detect_lang(question or paragraph_history)
 
     if lang == "ar":
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "مهمتك فقط إعادة صياغة السؤال إذا كان غامضًا.\n"
-                    "❗ القواعد الصارمة:\n"
-                    "- أعد كتابة السؤال فقط، بدون شرح أو تعليمات.\n"
-                    "- لا تجب على السؤال.\n"
-                    "- لا تضف معلومات جديدة.\n"
-                    "- إذا كان السؤال واضحًا بالفعل، أعده كما هو حرفيًا.\n"
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"المحادثة السابقة (للمرجع فقط):\n{chat_context}\n\n"
-                    f"السؤال الحالي:\n{query}\n\n"
-                    "اكتب السؤال النهائي فقط:"
-                ),
-            },
-        ]
+        sys = (
+            "أنت نظام لإعادة صياغة أسئلة الدردشة.\n"
+            "مهمتك: تحديد هل سؤال المستخدم يعتمد على تاريخ المحادثة أم لا، ثم (إذا كان يعتمد) إعادة صياغته ليصبح سؤالاً مستقلاً.\n\n"
+            "قواعد صارمة:\n"
+            "1) أخرج JSON فقط بدون أي نص إضافي.\n"
+            "2) إذا depends=false: اجعل rewrite مطابقاً للسؤال الأصلي حرفياً.\n"
+            "3) إذا depends=true: يجب أن تحتوي evidence على عبارة منسوخة حرفياً من تاريخ المحادثة (substring).\n"
+            "4) ممنوع اختراع موضوع/كيان غير موجود حرفياً في التاريخ.\n"
+            "5) لا تجب على السؤال.\n\n"
+            "صيغة الإخراج:\n"
+            "{\"depends\": true/false, \"rewrite\": \"...\", \"evidence\": \"...\", \"reason\": \"...\"}"
+        )
+        user = (
+            f"تاريخ المحادثة:\n{paragraph_history}\n\n"
+            f"السؤال الحالي:\n{question}\n\n"
+            "أخرج JSON فقط:"
+        )
     else:
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "Your task is ONLY to rewrite the question if it is ambiguous.\n"
-                    "STRICT RULES:\n"
-                    "- Output ONLY the rewritten question.\n"
-                    "- Do NOT answer the question.\n"
-                    "- Do NOT add explanations or instructions.\n"
-                    "- Do NOT add new information.\n"
-                    "- If the question is already clear, return it verbatim.\n"
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Previous conversation (reference only):\n{chat_context}\n\n"
-                    f"Current question:\n{query}\n\n"
-                    "Write the final question only:"
-                ),
-            },
-        ]
+        sys = (
+            "You are a chat question rewriting system.\n"
+            "Task: decide if the user's question depends on the chat history, and if so rewrite it to be standalone.\n\n"
+            "Strict rules:\n"
+            "1) Output JSON only (no extra text).\n"
+            "2) If depends=false: rewrite must match the original question verbatim.\n"
+            "3) If depends=true: evidence must be a verbatim substring copied from chat history.\n"
+            "4) Do NOT invent entities/topics not literally present in the history.\n"
+            "5) Do NOT answer the question.\n\n"
+            "Output schema:\n"
+            "{\"depends\": true/false, \"rewrite\": \"...\", \"evidence\": \"...\", \"reason\": \"...\"}"
+        )
+        user = (
+            f"Chat history:\n{paragraph_history}\n\n"
+            f"Current question:\n{question}\n\n"
+            "Output JSON only:"
+        )
 
-    rewritten = llm_chat(messages, max_tokens=64)
-    rewritten = normalize_q(rewritten)
-    # HARD SAFETY: fallback if model misbehaves
-    if not rewritten or len(rewritten) > 1000:
-        return query
+    raw = llm_chat(
+        [{"role": "system", "content": sys}, {"role": "user", "content": user}],
+        max_tokens=140,
+    )
+    obj = _extract_json_obj(raw)
+    if not obj:
+        return question
 
-    print(rewritten)
-    return rewritten
+    depends = bool(obj.get("depends", False))
+    rewrite = normalize_q(str(obj.get("rewrite", "")))
+    evidence = normalize_q(str(obj.get("evidence", "")))
+    print(depends)
+    print(rewrite)
+    print(evidence)
 
+    # ---- HARD VERIFICATION LAYER ----
+    if not depends:
+        # must be verbatim
+        return question
+
+    # # depends=true: evidence must be literally in history
+    # if not evidence or evidence not in paragraph_history:
+    #     return question
+
+    # # rewrite must include evidence to ensure it's actually grounded
+    # if evidence not in rewrite:
+    #     return question
+
+    # also cap length to prevent long injections
+    if len(rewrite) > max(40, int(len(question) * 2.2)):
+        return question
+
+    return rewrite or question
+
+def preserve_entities(answer: str, passages: List[Dict[str, Any]]) -> str:
+    """
+    Inject explicit FAQ entities (titles / key phrases) into the answer
+    so they survive in paragraph_history for future reference.
+    """
+    if not answer or not passages:
+        return answer
+
+    # Extract canonical entity names from FAQ questions
+    entities = []
+    for p in passages:
+        q = p.get("question", "")
+        if q:
+            entities.append(q)
+
+    # Pick the shortest (usually the canonical title)
+    entity = min(entities, key=len, default=None)
+    if entity and entity not in answer:
+        return f"({entity}) {answer}"
+
+    return answer
 
 # ===============================
 # History summarization (paragraph_history)
@@ -610,6 +633,11 @@ def summarize_history_so_far(paragraph_history: str, new_question: str, new_answ
 
     return _truncate_history_paragraph(out, limit=MAX_HISTORY_CHARS)
 
+def enforce_arabic_only(text: str) -> str:
+    # Remove any non-Arabic / non-punctuation characters
+    return re.sub(r"[^\u0600-\u06FF0-9\s\.\،\؛\:\!\؟\(\)\-\/]", "", text)
+
+
 # ===============================
 # Main answering entrypoint (JSON-in / JSON-out style)
 # ===============================
@@ -634,44 +662,30 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
         updated_history = summarize_history_so_far(paragraph_history, question, msg)
         return {"question": question, "answer": msg, "paragraph_history": updated_history}
 
-    
-    # 1) Try retrieval with original question
-    used_q = question
-    passages = retrieve(question, top_k=top_k, lang_hint=lang)
-    
-    # 2) Fallback: rewrite ONLY if no passages
-    if not passages and paragraph_history:
-        rewritten_q = normalize_q(rewrite_query(question, paragraph_history))
-    
-        # Retry only if rewrite actually changed something
-        if rewritten_q and rewritten_q != question:
-            passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
-            if passages:
-                used_q = rewritten_q
-    
-    # 3) If still nothing found → insufficient
+    # 1) Rewrite query using history paragraph (standalone question)
+    rewritten_q = rewrite_query(question, paragraph_history)
+
+    # 2) Retrieve using rewritten query
+    passages = retrieve(rewritten_q, top_k=top_k, lang_hint=lang)
     if not passages:
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-        updated_history = summarize_history_so_far(paragraph_history, used_q, msg)
-        return {
-            "question": used_q,
-            "answer": msg,
-            "paragraph_history": updated_history,
-        }
-    
-    # 4) Otherwise continue with answering
-    msgs = build_faq_messages(used_q, passages)
-    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip() or (
-        INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
-    )
-    
-    updated_history = summarize_history_so_far(paragraph_history, used_q, answer)
-    
-    return {
-        "question": used_q,
-        "answer": answer,
-        "paragraph_history": updated_history,
-    }
+        updated_history = summarize_history_so_far(paragraph_history, question, msg)
+        return {"question": question, "answer": msg, "paragraph_history": updated_history}
+
+    # 3) Generate strict FAQ answer
+    msgs = build_faq_messages(rewritten_q, passages)
+    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip()
+    answer = enforce_arabic_only(answer)
+
+
+    if not answer:
+        answer = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
+
+    # 4) Update paragraph history summary with the ORIGINAL question + produced answer
+    answer_for_history = preserve_entities(answer, passages)
+    updated_history = summarize_history_so_far(paragraph_history, question, answer_for_history)
+
+    return {"question": question, "answer": answer, "paragraph_history": updated_history}
 
 # ===============================
 # File helpers (JSON input/output)
@@ -706,14 +720,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
