@@ -684,9 +684,15 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
     # 4) Update paragraph history summary with the ORIGINAL question + produced answer
     answer_for_history = preserve_entities(answer, passages)
     updated_history = summarize_history_so_far(paragraph_history, question, answer_for_history)
-
-    return {"question": question, "answer": answer, "paragraph_history": updated_history}
-
+    return {
+        "question": question,
+        "answer": answer,
+        "paragraph_history": updated_history,
+        "_debug": {
+            "rewritten": rewritten_q,
+            "retrieved_faq_ids": [p["faq_id"] for p in passages]
+        }
+    }
 # ===============================
 # File helpers (JSON input/output)
 # ===============================
@@ -720,3 +726,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
