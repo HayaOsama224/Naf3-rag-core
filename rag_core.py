@@ -373,13 +373,14 @@ def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict
         "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
         "If the requested information is NOT present verbatim in the context, "
         f'reply EXACTLY: "{INSUFFICIENT_EN}". '
-        "Add short FAQ citations like (FAQ 012). Answer in the user's language."
+        "Answer in the user's language."
     )
     sys_ar = (
-        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
-        f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
-        "أضف إشارة موجزة لرقم السؤال مثل (FAQ 012). أجب بلغة المستخدم."
-    )
+    "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
+    f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
+    "أجب بلغة المستخدم."
+)
+
 
     sys = sys_ar if lang == "ar" else sys_en
 
@@ -395,9 +396,9 @@ def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict
         q = d.get("question") or ""
         a = d.get("answer") or ""
         if d.get("lang") == "ar":
-            blocks.append(f"س: {q}\nج: {a}\nالمصدر: {cite}")
+            blocks.append(f"س: {q}\nج: {a}\nالمصدر: {a}")
         else:
-            blocks.append(f"Q: {q}\nA: {a}\nSource: {cite}")
+            blocks.append(f"Q: {q}\nA: {a}\nSource: {a}")
 
     ctx = truncate_ctx("\n\n---\n\n".join(blocks))
 
@@ -644,8 +645,8 @@ def enforce_arabic_only(text: str) -> str:
 def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_K) -> Dict[str, str]:
     """
     Input:
-      - question: user question
-      - paragraph_history: a compact paragraph describing the history so far
+    - question: user question
+    - paragraph_history: a compact paragraph describing the history so far
 
     Output:
       - question: original question (unchanged)
