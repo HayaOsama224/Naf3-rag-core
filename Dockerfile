@@ -1,60 +1,37 @@
-# Use the -devel image, which includes nvcc and CUDA headers
 FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-devel
 
-# Set CUDA paths
 ENV CUDA_HOME=/usr/local/cuda
 ENV PATH=${CUDA_HOME}/bin:${PATH}
 ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
 
-# Configure build environment
+# Build-time environment variables for GPU support
 ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONUNBUFFERED=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1 \
-    TOKENIZERS_PARALLELISM=false \
-    HF_HOME=/workspace/.cache/huggingface \
-    TRANSFORMERS_CACHE=/workspace/.cache/huggingface \
-    HUGGINGFACE_HUB_CACHE=/workspace/.cache/huggingface \
     FORCE_CMAKE=1 \
     CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=${CUDA_HOME}"
 
 WORKDIR /workspace
 
-# Install essential build tools (removed cuda-toolkit-12-8 as it's now in the base)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    pkg-config \
-    git \
-    curl \
-    ca-certificates \
+    build-essential cmake git curl ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
+COPY requirements.txt .
 
-# Install requirements
-COPY requirements.txt /workspace/requirements.txt
-RUN pip install --upgrade pip setuptools wheel \
- && pip install -r /workspace/requirements.txt
+# 1. Install standard dependencies first
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install -r requirements.txt
 
-# Verify compiler is present
-RUN nvcc --version
+# 2. Force a source build of FAISS to match the hardware
+RUN pip install --no-cache-dir --force-reinstall --no-binary faiss-gpu faiss-gpu==1.13.2
 
-# Install llama-cpp-python
+# 3. Force a source build of llama-cpp-python to match the hardware
 RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python==0.3.16
 
-COPY rag_core.py /workspace/rag_core.py
-COPY handler.py /workspace/handler.py
-COPY data/ /workspace/data/
+# Verify GPU availability during build (if the builder has a GPU)
+# If this fails, it's okay, but the above builds must succeed
+RUN nvcc --version
 
-ENV DATA_DIR=/workspace/data \
-    INDEX_PATH=/workspace/artifacts/faq.index \
-    DOC_STORE_PATH=/workspace/artifacts/faq_docs.pkl \
-    USE_FAISS_GPU=1 \
-    FAISS_GPU_DEVICE=0 \
-    N_GPU_LAYERS=35 \
-    N_BATCH=512 \
-    N_CTX=4096 \
-    TOP_K=5
+COPY rag_core.py handler.py /workspace/
+COPY data/ /workspace/data/
 
 CMD ["python", "-u", "handler.py"]
