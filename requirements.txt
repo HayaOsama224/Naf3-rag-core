@@ -11,7 +11,7 @@ faiss-cpu
 
 # --- llama.cpp bindings ---
 diskcache>=5.6.1
-
+python-dotenv
 # --- common deps (usually pulled automatically, but safe) ---
 numpy>=1.26,<3
 llama-cpp-python

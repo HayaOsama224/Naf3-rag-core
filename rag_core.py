@@ -24,6 +24,9 @@
 #   TOP_K=5, N_CTX=4096, etc.
 
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 import json
 import glob
 import pickle
@@ -37,7 +40,7 @@ from langdetect import detect
 from sentence_transformers import SentenceTransformer
 from huggingface_hub import hf_hub_download
 from llama_cpp import Llama
-
+from groq import Groq
 # -------------------------------
 # FAISS import (CPU or GPU build)
 # -------------------------------
@@ -86,7 +89,15 @@ FAISS_GPU_DEVICE = int(os.getenv("FAISS_GPU_DEVICE", "0"))
 # llama.cpp offload controls
 N_GPU_LAYERS = int(os.getenv("N_GPU_LAYERS", "35"))  # set 0 to force CPU
 N_BATCH = int(os.getenv("N_BATCH", "512"))
+# LLM provider controls
+# Options:
+#   groq = use Groq API for generation
+#   qwen = use local Qwen GGUF through llama.cpp
+GENERATION_PROVIDER = os.getenv("GENERATION_PROVIDER", "qwen").strip().lower()
 
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+ENABLE_QWEN_FALLBACK = os.getenv("ENABLE_QWEN_FALLBACK", "1").strip() == "1"
+LOAD_QWEN_ON_STARTUP = os.getenv("LOAD_QWEN_ON_STARTUP", "0").strip() == "1"
 # History controls
 MAX_HISTORY_CHARS = int(os.getenv("MAX_HISTORY_CHARS", "900"))  # output paragraph_history limit
 def answer_query(question: str, top_k: int = TOP_K, history: Optional[List[Dict[str, str]]] = None):
@@ -322,46 +333,105 @@ try:
 except Exception as e:
     print("[init] Failed to load embedder:", e)
     EMBEDDER = None
+# ===============================
+# LLM provider setup: Groq + Qwen fallback
+# ===============================
 
-# ===============================
-# LLM (llama.cpp) setup
-# ===============================
+GROQ_CLIENT = None
+
+def get_groq_client():
+    """
+    Lazy Groq client.
+    It only initializes when generation is actually requested.
+    """
+    global GROQ_CLIENT
+
+    if GROQ_CLIENT is not None:
+        return GROQ_CLIENT
+
+    if not os.getenv("GROQ_API_KEY"):
+        print("[groq] GROQ_API_KEY is not set.")
+        return None
+
+    try:
+        GROQ_CLIENT = Groq()
+        print(f"[groq] Client initialized with model: {GROQ_MODEL}")
+        return GROQ_CLIENT
+    except Exception as e:
+        print("[groq] Failed to initialize Groq client:", e)
+        return None
+
 
 def get_llm() -> Llama:
+    """
+    Lazy local Qwen loader.
+    Qwen is still kept in the project, but it will not load unless needed.
+    """
+    global LLM
+
+    if LLM is not None:
+        return LLM
+
     local_path = hf_hub_download(
         repo_id=GGUF_REPO_ID,
         filename=GGUF_FILENAME,
         local_dir="./models",
     )
 
-    return Llama(
+    LLM = Llama(
         model_path=local_path,
         n_threads=max(2, os.cpu_count() or 2),
         n_ctx=N_CTX,
         n_gpu_layers=max(0, N_GPU_LAYERS),
         n_batch=N_BATCH,
         chat_format="qwen",
-        verbose=False,  # set True if you want GPU offload logs
+        verbose=False,
     )
+
+    print("[qwen] Local Qwen model loaded.")
+    return LLM
+
+
+def llm_is_available() -> bool:
+    """
+    Checks whether at least one generation provider is available.
+    """
+    if GENERATION_PROVIDER == "groq" and os.getenv("GROQ_API_KEY"):
+        return True
+
+    if LLM is not None:
+        return True
+
+    if GENERATION_PROVIDER == "qwen":
+        return True
+
+    if ENABLE_QWEN_FALLBACK:
+        return True
+
+    return False
+
 
 def _safe_close_llm():
     global LLM
     try:
         if LLM is not None:
-            # llama-cpp-python exposes .close()
             LLM.close()
     except Exception:
         pass
     finally:
         LLM = None
 
-try:
-    LLM = get_llm()
-except Exception as e:
-    print("[init] Failed to init LLM:", e)
-    LLM = None
-atexit.register(_safe_close_llm)   
 
+# Optional eager Qwen loading.
+# For Groq mode, keep this false so the 2GB Qwen model does not load at startup.
+if GENERATION_PROVIDER == "qwen" or LOAD_QWEN_ON_STARTUP:
+    try:
+        LLM = get_llm()
+    except Exception as e:
+        print("[init] Failed to init Qwen LLM:", e)
+        LLM = None
+
+atexit.register(_safe_close_llm)
 # ===============================
 # Retrieval
 # ===============================
@@ -444,22 +514,72 @@ def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict
 
     return [{"role": "system", "content": sys}, {"role": "user", "content": user}]
 
-def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
-    if LLM is None:
-        # Don’t hallucinate: return insufficient
-        # caller can decide which language string to return
+def _groq_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
+    client = get_groq_client()
+    if client is None:
         return ""
-    out = LLM.create_chat_completion(
-        messages=messages,
-        temperature=0.0,
-        max_tokens=max_tokens,
-        repeat_penalty=1.15,
-        stop=None,
-    )
+
     try:
-        return out["choices"][0]["message"]["content"].strip()
-    except Exception:
+        out = client.chat.completions.create(
+            model=GROQ_MODEL,
+            messages=messages,
+            temperature=0.0,
+            max_tokens=max_tokens,
+        )
+        return out.choices[0].message.content.strip()
+    except Exception as e:
+        print("[groq] Chat completion failed:", e)
         return ""
+
+
+def _qwen_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
+    try:
+        llm = get_llm()
+    except Exception as e:
+        print("[qwen] Failed to load local Qwen:", e)
+        return ""
+
+    if llm is None:
+        return ""
+
+    try:
+        out = llm.create_chat_completion(
+            messages=messages,
+            temperature=0.0,
+            max_tokens=max_tokens,
+            repeat_penalty=1.15,
+            stop=None,
+        )
+        return out["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        print("[qwen] Chat completion failed:", e)
+        return ""
+
+
+def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
+    """
+    Main generation router.
+
+    If GENERATION_PROVIDER=groq:
+        use Groq first.
+        if Groq fails and ENABLE_QWEN_FALLBACK=1, use local Qwen.
+
+    If GENERATION_PROVIDER=qwen:
+        use local Qwen directly.
+    """
+
+    if GENERATION_PROVIDER == "groq":
+        answer = _groq_chat(messages, max_tokens=max_tokens)
+        if answer:
+            return answer
+
+        if ENABLE_QWEN_FALLBACK:
+            print("[provider] Groq failed. Falling back to local Qwen.")
+            return _qwen_chat(messages, max_tokens=max_tokens)
+
+        return ""
+
+    return _qwen_chat(messages, max_tokens=max_tokens)
 
 # ===============================
 # Query rewrite (history-aware, no new facts)
@@ -490,9 +610,9 @@ def rewrite_query(question: str, paragraph_history: str) -> str:
     question = normalize_q(question)
     paragraph_history = normalize_q(paragraph_history)
 
-    if not question or not paragraph_history or LLM is None:
+    if not question or not paragraph_history or not llm_is_available():
         return question
-
+    
     lang = detect_lang(question or paragraph_history)
 
     if lang == "ar":
@@ -624,9 +744,8 @@ def summarize_history_so_far(paragraph_history: str, new_question: str, new_answ
     head = merged[:-keep_tail_len].strip()
 
     # If no LLM, just hard-truncate head
-    if LLM is None or not head:
+    if not llm_is_available() or not head:
         return _truncate_history_paragraph("[...]" + tail, limit=MAX_HISTORY_CHARS)
-
     # LLM-based compression of the older head
     if lang == "ar":
         sys = (
@@ -685,7 +804,7 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
 
     lang = detect_lang(question or paragraph_history)
 
-    if INDEX is None or EMBEDDER is None or LLM is None:
+    if INDEX is None or EMBEDDER is None or not llm_is_available():
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
         updated_history = summarize_history_so_far(paragraph_history, question, msg)
         return {"question": question, "answer": msg, "paragraph_history": updated_history}
