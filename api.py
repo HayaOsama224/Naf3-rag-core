@@ -3,14 +3,16 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List, Optional
 
-from rag_core import (
-    answer_query,
-    TOP_K,
-    detect_lang,
-    INSUFFICIENT_EN,
-    INSUFFICIENT_AR,
-)
-
+#from rag_core import (
+  # answer_query,
+  # TOP_K ,
+  #  detect_lang,
+   # INSUFFICIENT_EN,
+   # INSUFFICIENT_AR,
+#)
+TOP_K = 5
+INSUFFICIENT_EN = "Insufficient FAQ context"
+INSUFFICIENT_AR = "لا توجد إجابة في الأسئلة الشائعة الحالية"
 description = """
 Naf3 Charity FAQ RAG Microservice
 
@@ -66,6 +68,14 @@ class AskResponse(BaseModel):
     passages: List[Passage]
 
 
+@app.get("/")
+def root():
+    return {
+        "message": "Naf3 RAG API is running",
+        "swagger": "/docs",
+        "ask_endpoint": "/ask"
+    }
+
 @app.post(
     "/ask",
     response_model=AskResponse,
@@ -73,14 +83,10 @@ class AskResponse(BaseModel):
     tags=["faq"],
 )
 def ask(req: AskRequest):
-    """
-    Ask a charity FAQ question in Arabic or English and get a short answer
-    grounded in the FAQ JSON.
+    from rag_core import answer_query, detect_lang
 
-    If the information is not present in the FAQ corpus, the service responds
-    with a fixed insufficient-context message and sets `insufficient = true`.
-    """
     k = req.top_k or TOP_K
+
     history = None
     if req.history:
         history = []
@@ -99,6 +105,5 @@ def ask(req: AskRequest):
         answer=answer,
         insufficient=insufficient_flag,
         lang=lang,
-        passages=docs
+        passages=docs,
     )
-

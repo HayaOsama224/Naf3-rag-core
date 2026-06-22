@@ -89,7 +89,34 @@ N_BATCH = int(os.getenv("N_BATCH", "512"))
 
 # History controls
 MAX_HISTORY_CHARS = int(os.getenv("MAX_HISTORY_CHARS", "900"))  # output paragraph_history limit
+def answer_query(question: str, top_k: int = TOP_K, history: Optional[List[Dict[str, str]]] = None):
+    paragraph_history = ""
 
+    if history:
+        turns = []
+        for turn in history:
+            q = normalize_q(turn.get("question", ""))
+            a = normalize_q(turn.get("answer", ""))
+            if q or a:
+                turns.append(f"Q: {q} A: {a}")
+        paragraph_history = " ".join(turns)
+
+    result = answer_with_json_io(
+        question=question,
+        paragraph_history=paragraph_history,
+        top_k=top_k,
+    )
+
+    lang = detect_lang(question or paragraph_history)
+    rewritten_q = result.get("_debug", {}).get("rewritten", question)
+
+    passages = retrieve(
+        rewritten_q,
+        top_k=top_k,
+        lang_hint=lang,
+    )
+
+    return result.get("answer", ""), passages
 # ===============================
 # HELPERS
 # ===============================
@@ -676,7 +703,9 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
     # 3) Generate strict FAQ answer
     msgs = build_faq_messages(rewritten_q, passages)
     answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip()
-    answer = enforce_arabic_only(answer)
+    #answer = enforce_arabic_only(answer)
+    if lang == "ar":
+        answer = enforce_arabic_only(answer)
 
 
     if not answer:

@@ -36,7 +36,12 @@ RUN pip install --index-url https://pypi.org/simple \
       --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu122 \
       llama-cpp-python==0.3.16
 # Copy app
+#COPY rag_core.py /workspace/rag_core.py
+#COPY handler.py /workspace/handler.py
+#COPY data/ /workspace/data/
 COPY rag_core.py /workspace/rag_core.py
+COPY api.py /workspace/api.py
+COPY app.py /workspace/app.py
 COPY handler.py /workspace/handler.py
 COPY data/ /workspace/data/
 
@@ -51,5 +56,6 @@ ENV DATA_DIR=/workspace/data \
     N_CTX=4096 \
     TOP_K=5
 
-CMD ["python", "-u", "handler.py"]
+#CMD ["python", "-u", "handler.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
 
