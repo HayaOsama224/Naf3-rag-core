@@ -1,5 +1,5 @@
-# Dockerfile (RunPod Serverless)
-FROM pytorch/pytorch:2.9.0-cuda12.6-cudnn9-runtime
+# Use a newer PyTorch image that supports CUDA 12.8
+FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
@@ -10,12 +10,11 @@ ENV DEBIAN_FRONTEND=noninteractive \
     TRANSFORMERS_CACHE=/workspace/.cache/huggingface \
     HUGGINGFACE_HUB_CACHE=/workspace/.cache/huggingface \
     FORCE_CMAKE=1 \
-    CMAKE_ARGS="-DGGML_CUDA=on" \
-    TORCH_CUDA_ARCH_LIST="8.0 8.6 9.0 12.0"
+    CMAKE_ARGS="-DGGML_CUDA=on"
 
 WORKDIR /workspace
 
-# Added 'git' to the install list
+# Install essential build tools, including git
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
@@ -31,7 +30,7 @@ COPY requirements.txt /workspace/requirements.txt
 RUN pip install --upgrade pip setuptools wheel \
  && pip install -r /workspace/requirements.txt
 
-# This will now succeed because git is installed
+# Reinstall llama-cpp-python to compile against CUDA 12.8
 RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python==0.3.16
 
 COPY rag_core.py /workspace/rag_core.py
