@@ -1,19 +1,8 @@
-# Use a runtime image, but we will add build tools
-FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
+# Use the -devel image, which includes nvcc and CUDA headers
+FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-devel
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    pkg-config \
-    git \
-    curl \
-    ca-certificates \
-    cuda-toolkit-12-8 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Set paths so nvcc and libraries are found
-ENV CUDA_HOME=/usr/local/cuda-12.8
+# Set CUDA paths
+ENV CUDA_HOME=/usr/local/cuda
 ENV PATH=${CUDA_HOME}/bin:${PATH}
 ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
 
@@ -30,6 +19,16 @@ ENV DEBIAN_FRONTEND=noninteractive \
     CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=${CUDA_HOME}"
 
 WORKDIR /workspace
+
+# Install essential build tools (removed cuda-toolkit-12-8 as it's now in the base)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    pkg-config \
+    git \
+    curl \
+    ca-certificates \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
 
