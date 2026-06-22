@@ -1,13 +1,23 @@
-# --- Core RAG requirements ---
-# Use a newer PyTorch image that supports CUDA 12.8
+# Use a runtime image, but we will add build tools
 FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
 
-# Set CUDA paths explicitly
-ENV CUDA_HOME=/usr/local/cuda
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    pkg-config \
+    git \
+    curl \
+    ca-certificates \
+    cuda-toolkit-12-8 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set paths so nvcc and libraries are found
+ENV CUDA_HOME=/usr/local/cuda-12.8
 ENV PATH=${CUDA_HOME}/bin:${PATH}
 ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
 
-# Set build arguments for llama-cpp-python
+# Configure build environment
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
@@ -21,27 +31,17 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /workspace
 
-# Install essential build tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    pkg-config \
-    git \
-    curl \
-    ca-certificates \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
 
-# Copy requirements and install
+# Install requirements
 COPY requirements.txt /workspace/requirements.txt
 RUN pip install --upgrade pip setuptools wheel \
  && pip install -r /workspace/requirements.txt
 
-# Verify CUDA is visible to the compiler before building
+# Verify compiler is present
 RUN nvcc --version
 
-# Reinstall llama-cpp-python to compile against CUDA 12.8
+# Install llama-cpp-python
 RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python==0.3.16
 
 COPY rag_core.py /workspace/rag_core.py
