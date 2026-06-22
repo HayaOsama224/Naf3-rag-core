@@ -70,8 +70,7 @@ EMBED_MODEL = os.getenv("EMBED_MODEL", "intfloat/multilingual-e5-base")
 # GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "Qwen/Qwen2.5-3B-Instruct-GGUF")
 # GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen2.5-3b-instruct-q4_k_m.gguf")
 GGUF_REPO_ID = os.getenv("GGUF_REPO_ID", "lm-kit/qwen-3-14b-instruct-gguf")
-GGUF_FILENAME = os.getenv("GGUF_FILENAME", "qwen-3-14b-instruct-q4_k_m.gguf")
-
+GGUF_FILENAME = os.getenv("GGUF_FILENAME", "Qwen3-14B-Q4_K_M.gguf")
 TOP_K = int(os.getenv("TOP_K", "5"))
 MAX_CTX_CHARS = int(os.getenv("MAX_CTX_CHARS", "4000"))
 
