@@ -1,61 +1,36 @@
-# Dockerfile (RunPod Serverless) — CUDA 12.6 + Torch already included
-FROM pytorch/pytorch:2.9.0-cuda12.6-cudnn9-runtime
+FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-devel
 
+ENV CUDA_HOME=/usr/local/cuda
+ENV PATH=${CUDA_HOME}/bin:${PATH}
+ENV LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}
+
+# Build-time environment variables for GPU support
 ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONUNBUFFERED=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1 \
-    TOKENIZERS_PARALLELISM=false \
-    HF_HOME=/workspace/.cache/huggingface \
-    TRANSFORMERS_CACHE=/workspace/.cache/huggingface \
-    HUGGINGFACE_HUB_CACHE=/workspace/.cache/huggingface \
-    # Build llama-cpp-python with CUDA support
     FORCE_CMAKE=1 \
-    CMAKE_ARGS="-DGGML_CUDA=on"
+    CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=${CUDA_HOME}"
 
 WORKDIR /workspace
 
-# System deps for building llama-cpp-python (and general utilities)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    cmake \
-    pkg-config \
-    git \
-    curl \
-    ca-certificates \
+    build-essential cmake git curl ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+      
+COPY requirements.txt .
 
-# Create expected dirs
-RUN mkdir -p /workspace/artifacts /workspace/data /workspace/models /workspace/.cache/huggingface
-# Install Python deps
-COPY requirements.txt /workspace/requirements.txt
-RUN pip install --upgrade pip setuptools wheel \
- && pip install -r /workspace/requirements.txt
+# 1. Install standard dependencies first
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install -r requirements.txt
 
-RUN pip install --index-url https://pypi.org/simple \
-      --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu122 \
-      llama-cpp-python==0.3.16
-# Copy app
-#COPY rag_core.py /workspace/rag_core.py
-#COPY handler.py /workspace/handler.py
-#COPY data/ /workspace/data/
-COPY rag_core.py /workspace/rag_core.py
-COPY api.py /workspace/api.py
-COPY app.py /workspace/app.py
-COPY handler.py /workspace/handler.py
+# 2. Install FAISS GPU (Standard wheel)
+RUN pip install --no-cache-dir faiss-gpu
+# 3. Force a source build of llama-cpp-python (This one DOES support --no-binary)
+RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python 
+
+# Verify GPU availability during build (if the builder has a GPU)
+# If this fails, it's okay, but the above builds must succeed
+RUN nvcc --version
+
+COPY rag_core.py handler.py /workspace/
 COPY data/ /workspace/data/
 
-# Default env (override in RunPod template if you want)
-ENV DATA_DIR=/workspace/data \
-    INDEX_PATH=/workspace/artifacts/faq.index \
-    DOC_STORE_PATH=/workspace/artifacts/faq_docs.pkl \
-    USE_FAISS_GPU=1 \
-    FAISS_GPU_DEVICE=0 \
-    N_GPU_LAYERS=35 \
-    N_BATCH=512 \
-    N_CTX=4096 \
-    TOP_K=5
-
-#CMD ["python", "-u", "handler.py"]
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
-
+CMD ["python", "-u", "handler.py"]
