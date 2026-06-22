@@ -1,6 +1,9 @@
 # Use a newer PyTorch image that supports CUDA 12.8
 FROM pytorch/pytorch:2.7.0-cuda12.8-cudnn9-runtime
 
+ENV PATH=/usr/local/cuda/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
+
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
