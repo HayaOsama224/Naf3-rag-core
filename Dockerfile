@@ -22,10 +22,9 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
     && pip install -r requirements.txt
 
 # 2. Install FAISS GPU (Standard wheel)
-RUN pip install --no-cache-dir faiss-gpu==1.13.2
-
+RUN pip install --no-cache-dir faiss-gpu
 # 3. Force a source build of llama-cpp-python (This one DOES support --no-binary)
-RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python==0.3.16
+RUN pip install --no-cache-dir --force-reinstall --no-binary llama-cpp-python llama-cpp-python 
 
 # Verify GPU availability during build (if the builder has a GPU)
 # If this fails, it's okay, but the above builds must succeed
