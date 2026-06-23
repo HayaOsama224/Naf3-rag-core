@@ -12,8 +12,13 @@ faiss-cpu
 # --- llama.cpp bindings ---
 diskcache>=5.6.1
 python-dotenv
+groq
+setuptools<82
+
 # --- common deps (usually pulled automatically, but safe) ---
 numpy>=1.26,<3
 llama-cpp-python
 fastapi>=0.115.0
 uvicorn[standard]>=0.30.0
+  
+ 
