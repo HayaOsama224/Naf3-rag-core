@@ -1,0 +1,1539 @@
+{
+  "meta": {
+    "created": "2026-06-23T00:23:47Z",
+    "count": 70,
+    "language": "ar-eg,en",
+    "schema_version": "2.0",
+    "source": "Nafaa thesis + previous charity_faq_eg_ar_en structure",
+    "notes": "Bilingual FAQ dataset for Nafaa chatbot. Includes Egyptian Arabic and English aliases for semantic retrieval."
+  },
+  "faqs": [
+    {
+      "id": "faq_001",
+      "question_ar": "نفع بيعمل إيه؟",
+      "aliases_ar": [
+        "إيه فكرة تطبيق نفع؟",
+        "التطبيق ده مخصوص لإيه؟",
+        "اشرحلي Nafaa ببساطة"
+      ],
+      "answer_ar": "نفع منصة رقمية لإدارة أعمال الخير، بتربط المستفيدين والمتبرعين والجمعيات والشركاء. المستفيد يقدر يقدم طلب مساعدة ويتابع حالته، والمتبرع يقدر يتبرع ويتابع أثر تبرعه، والجمعية تراجع وتوزع الدعم بشفافية.",
+      "question_en": "What does Nafaa do?",
+      "aliases_en": [
+        "What is Nafaa?",
+        "What is this platform for?",
+        "Can you explain Nafaa simply?"
+      ],
+      "answer_en": "Nafaa is a digital charity management platform that connects recipients, donors, charities, and partner stores. Recipients can submit and track aid requests, donors can donate and follow impact, and charities can review and distribute aid transparently.",
+      "tags": [
+        "general",
+        "platform"
+      ]
+    },
+    {
+      "id": "faq_002",
+      "question_ar": "مين يقدر يستخدم نفع؟",
+      "aliases_ar": [
+        "التطبيق لمين؟",
+        "هل نفع للمتبرعين بس؟",
+        "مين المستخدمين في نفع؟"
+      ],
+      "answer_ar": "نفع بيدعم مستفيدين، متبرعين، موظفين جمعيات، موظفين شركاء، وأدمن. الشات بوت معمول أساسا لمساعدة المستفيد والمتبرع في استخدام التطبيق.",
+      "question_en": "Who can use Nafaa?",
+      "aliases_en": [
+        "Who are Nafaa users?",
+        "Is Nafaa only for donors?",
+        "What roles does Nafaa support?"
+      ],
+      "answer_en": "Nafaa supports recipients, donors, charity staff, partner staff, and admins. The chatbot is mainly designed to help recipients and donors use the app.",
+      "tags": [
+        "general",
+        "roles"
+      ]
+    },
+    {
+      "id": "faq_003",
+      "question_ar": "الشات بوت يساعدني في إيه؟",
+      "aliases_ar": [
+        "أقدر أسأل البوت عن إيه؟",
+        "البوت بيرد على أنهي أسئلة؟",
+        "هل البوت يساعدني في الطلبات والتبرعات؟"
+      ],
+      "answer_ar": "الشات بوت يجاوب على أسئلة عامة عن التبرعات، طلبات المساعدة، حالة الطلب، الكارت الافتراضي، النقط، الإيصالات، التبرعات الشهرية، وطريقة استخدام التطبيق. لو السؤال مش موجود في قاعدة المعرفة، المفروض يقول إن مفيش معلومات كافية بدل ما يخمن.",
+      "question_en": "What can the chatbot help me with?",
+      "aliases_en": [
+        "What can I ask the chatbot?",
+        "Can the bot help with donations?",
+        "Can the chatbot help with aid requests?"
+      ],
+      "answer_en": "The chatbot answers common questions about donations, assistance requests, request status, virtual cards, points, receipts, scheduled donations, and app usage. If the answer is not in the knowledge base, it should say there is not enough information instead of guessing.",
+      "tags": [
+        "chatbot",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_004",
+      "question_ar": "ينفع أسأل بالعربي والإنجليزي؟",
+      "aliases_ar": [
+        "البوت بيفهم عربي؟",
+        "ينفع أكتب بالمصري؟",
+        "الشات بوت بيدعم English؟"
+      ],
+      "answer_ar": "أيوه، الشات بوت يدعم العربي والإنجليزي، ومصمم يتعامل مع العامية المصرية والصياغات المختلفة قدر الإمكان.",
+      "question_en": "Can I ask in Arabic and English?",
+      "aliases_en": [
+        "Does the bot support Arabic?",
+        "Can I use Egyptian Arabic?",
+        "Can I ask in English?"
+      ],
+      "answer_en": "Yes. The chatbot supports Arabic and English and is designed to handle Egyptian Arabic phrasing and different ways of asking when possible.",
+      "tags": [
+        "chatbot",
+        "language"
+      ]
+    },
+    {
+      "id": "faq_005",
+      "question_ar": "هل البوت بياخد قرارات قبول أو رفض؟",
+      "aliases_ar": [
+        "البوت يوافق على طلبي؟",
+        "هل الذكاء الاصطناعي بيقرر؟",
+        "مين بيقرر الموافقة؟"
+      ],
+      "answer_ar": "لا. الشات بوت والذكاء الاصطناعي في نفع أدوات مساعدة فقط. قرار قبول أو رفض الطلب أو تحديد مبلغ الدعم بيكون من موظفين الجمعية المصرح لهم بعد مراجعة الطلب والمستندات.",
+      "question_en": "Does the chatbot approve or reject requests?",
+      "aliases_en": [
+        "Can the bot accept my request?",
+        "Does AI make the final decision?",
+        "Who approves aid requests?"
+      ],
+      "answer_en": "No. The chatbot and AI features are support tools only. Final approval, rejection, or aid allocation decisions are made by authorized charity staff after reviewing the request and evidence.",
+      "tags": [
+        "chatbot",
+        "ai",
+        "human_review"
+      ]
+    },
+    {
+      "id": "faq_006",
+      "question_ar": "إزاي أعمل حساب كمتبرع؟",
+      "aliases_ar": [
+        "عايز أسجل كمتبرع",
+        "أفتح حساب متبرع منين؟",
+        "لو أنا متبرع أبدأ منين؟"
+      ],
+      "answer_ar": "من تطبيق المتبرع اختار تسجيل، واكتب بياناتك الأساسية زي الإيميل أو رقم الموبايل وكلمة السر. بعد التحقق، تقدر تدخل وتشوف الجمعيات والحملات وتتبرع.",
+      "question_en": "How do I create a donor account?",
+      "aliases_en": [
+        "How can I register as a donor?",
+        "Where do I sign up as a donor?",
+        "How do I start as a donor?"
+      ],
+      "answer_en": "From the donor app, choose Register and enter your basic details such as email or phone number and password. After verification, you can browse charities and campaigns and donate.",
+      "tags": [
+        "donor",
+        "account",
+        "registration"
+      ]
+    },
+    {
+      "id": "faq_007",
+      "question_ar": "إزاي أسجل دخول كمتبرع؟",
+      "aliases_ar": [
+        "أدخل حساب المتبرع إزاي؟",
+        "أعمل login كمتبرع إزاي؟",
+        "تسجيل دخول المتبرع بإيه؟"
+      ],
+      "answer_ar": "افتح تطبيق المتبرع واختار تسجيل دخول، واكتب الإيميل أو رقم الموبايل وكلمة السر. لو البيانات صحيحة، هتدخل على حسابك.",
+      "question_en": "How do I log in as a donor?",
+      "aliases_en": [
+        "How can donors sign in?",
+        "Where is donor login?",
+        "What do I use to log in as a donor?"
+      ],
+      "answer_en": "Open the donor app, choose Log In, and enter your email or phone number with your password. If the credentials are correct, you will access your donor account.",
+      "tags": [
+        "donor",
+        "login"
+      ]
+    },
+    {
+      "id": "faq_008",
+      "question_ar": "إزاي أتبرع من التطبيق؟",
+      "aliases_ar": [
+        "عايز أتبرع أعمل إيه؟",
+        "أدفع تبرع منين؟",
+        "طريقة التبرع في نفع إيه؟"
+      ],
+      "answer_ar": "ادخل تطبيق المتبرع، اختار الجمعية أو المشروع أو الحملة، اكتب مبلغ التبرع، راجع الرسوم إن وجدت، اختار وسيلة الدفع، وبعد نجاح العملية هيظهر تأكيد ويتسجل إيصال.",
+      "question_en": "How do I donate through the app?",
+      "aliases_en": [
+        "How can I make a donation?",
+        "Where do I donate in Nafaa?",
+        "What are the donation steps?"
+      ],
+      "answer_en": "Open the donor app, choose a charity, project, or campaign, enter the donation amount, review any displayed fees, select a payment method, and confirm. After success, an invoice is generated.",
+      "tags": [
+        "donor",
+        "donation",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_009",
+      "question_ar": "أقل مبلغ للتبرع كام؟",
+      "aliases_ar": [
+        "ينفع أتبرع بخمسة جنيه؟",
+        "الحد الأدنى للتبرع إيه؟",
+        "ممكن أتبرع بمبلغ صغير؟"
+      ],
+      "answer_ar": "الحد الأدنى للتبرع في نفع هو 5 جنيه، والنظام بيتحقق من المبلغ قبل تأكيد الدفع.",
+      "question_en": "What is the minimum donation amount?",
+      "aliases_en": [
+        "Can I donate 5 EGP?",
+        "What is the lowest donation amount?",
+        "Is there a minimum donation?"
+      ],
+      "answer_en": "The minimum donation amount in Nafaa is 5 EGP. The system validates the amount before confirming payment.",
+      "tags": [
+        "donor",
+        "donation",
+        "limits"
+      ]
+    },
+    {
+      "id": "faq_010",
+      "question_ar": "هل في رسوم على التبرع؟",
+      "aliases_ar": [
+        "في مصاريف خدمة؟",
+        "هل بيضاف transaction fees؟",
+        "المبلغ النهائي بيبان قبل الدفع؟"
+      ],
+      "answer_ar": "لو في أي رسوم خاصة ببوابة الدفع أو العملية، نفع بيعرضها قبل تأكيد التبرع عشان تعرف المبلغ النهائي بوضوح.",
+      "question_en": "Are there fees on donations?",
+      "aliases_en": [
+        "Are payment fees added?",
+        "Will I see transaction fees?",
+        "Where can I see the final amount?"
+      ],
+      "answer_en": "If payment gateway or transaction fees apply, Nafaa displays them before donation confirmation so you can review the final amount clearly.",
+      "tags": [
+        "donor",
+        "fees",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_011",
+      "question_ar": "ينفع أتبرع لجمعية معينة؟",
+      "aliases_ar": [
+        "أقدر أختار جمعية؟",
+        "عايز أتبرع لمؤسسة محددة",
+        "هل أقدر أحدد الجمعية؟"
+      ],
+      "answer_ar": "أيوه، المتبرع يقدر يختار جمعية معينة من التطبيق ويتبرع لها مباشرة، أو يختار مشروع أو حملة تابعة للجمعية لو متاحة.",
+      "question_en": "Can I donate to a specific charity?",
+      "aliases_en": [
+        "Can I choose the charity?",
+        "Can I support one organization?",
+        "Where do I select the charity?"
+      ],
+      "answer_en": "Yes. Donors can select a specific charity and donate directly to it, or choose one of its available projects or campaigns.",
+      "tags": [
+        "donor",
+        "charity",
+        "donation"
+      ]
+    },
+    {
+      "id": "faq_012",
+      "question_ar": "ينفع أتبرع لمشروع أو حملة؟",
+      "aliases_ar": [
+        "أقدر أدعم campaign؟",
+        "أدعم مشروع معين إزاي؟",
+        "في تبرع لحملة محددة؟"
+      ],
+      "answer_ar": "أيوه، لو الجمعية عاملة مشروع أو حملة ظاهرة للمتبرعين، تقدر تختارها وتشوف تفاصيلها ومبلغها المستهدف أو تقدمها قبل التبرع.",
+      "question_en": "Can I donate to a project or campaign?",
+      "aliases_en": [
+        "Can I support a campaign?",
+        "How do I donate to a project?",
+        "Can donations target projects?"
+      ],
+      "answer_en": "Yes. If a charity has a public project or campaign, you can select it, review its details and progress or target amount, then donate.",
+      "tags": [
+        "donor",
+        "campaigns",
+        "projects"
+      ]
+    },
+    {
+      "id": "faq_013",
+      "question_ar": "هل أقدر أعمل تبرع شهري؟",
+      "aliases_ar": [
+        "ينفع donation شهري؟",
+        "أعمل تبرع متكرر إزاي؟",
+        "عايز أظبط تبرع دوري"
+      ],
+      "answer_ar": "أيوه، تقدر تختار التبرع الشهري أثناء عملية التبرع، تحدد المبلغ والهدف ووسيلة الدفع، والنظام يبعتلك إشعار قبل كل عملية مجدولة.",
+      "question_en": "Can I schedule monthly donations?",
+      "aliases_en": [
+        "Can I make recurring donations?",
+        "How do I set up monthly giving?",
+        "Can I donate every month?"
+      ],
+      "answer_en": "Yes. During donation, you can choose monthly donation, set the amount, target, and payment method, and the system will notify you before each scheduled charge.",
+      "tags": [
+        "donor",
+        "recurring",
+        "scheduled_donation"
+      ]
+    },
+    {
+      "id": "faq_014",
+      "question_ar": "أقدر أوقف أو أعدل التبرع الشهري؟",
+      "aliases_ar": [
+        "إزاي ألغي التبرع الدوري؟",
+        "أغير مبلغ التبرع الشهري إزاي؟",
+        "أوقف scheduled donation منين؟"
+      ],
+      "answer_ar": "من صفحة التبرعات المجدولة، تقدر توقف أو تستكمل أو تلغي التبرع الشهري، وكمان تعدل المبلغ أو الهدف أو وسيلة الدفع حسب المتاح في التطبيق.",
+      "question_en": "Can I pause or edit a monthly donation?",
+      "aliases_en": [
+        "How do I cancel recurring donations?",
+        "Can I change my scheduled donation amount?",
+        "Where do I stop monthly donations?"
+      ],
+      "answer_en": "From Scheduled Donations, you can pause, resume, cancel, or edit a monthly donation, including amount, target, or payment method when supported.",
+      "tags": [
+        "donor",
+        "recurring",
+        "scheduled_donation"
+      ]
+    },
+    {
+      "id": "faq_015",
+      "question_ar": "إيه طرق الدفع المتاحة للتبرع؟",
+      "aliases_ar": [
+        "أدفع بإيه؟",
+        "فيزا ولا محفظة؟",
+        "هل في كارت بنكي؟"
+      ],
+      "answer_ar": "نفع يدعم وسائل دفع مرتبطة بالنظام مثل كارت بنكي أو محفظة رقمية حسب التكامل المتاح. التطبيق يطلب بيانات الدفع المطلوبة ويعرض التأكيد بعد نجاح العملية.",
+      "question_en": "What payment methods are available?",
+      "aliases_en": [
+        "Can I pay by card or wallet?",
+        "What can I use to pay?",
+        "Are digital wallets supported?"
+      ],
+      "answer_en": "Nafaa supports integrated payment methods such as bank card or digital wallet depending on availability. The app collects the required payment details and confirms after success.",
+      "tags": [
+        "donor",
+        "payments"
+      ]
+    },
+    {
+      "id": "faq_016",
+      "question_ar": "إزاي أضيف أو أغير وسيلة الدفع؟",
+      "aliases_ar": [
+        "أضيف كارت منين؟",
+        "أغير المحفظة إزاي؟",
+        "payment methods فين؟"
+      ],
+      "answer_ar": "من حسابك كمتبرع افتح طرق الدفع. تقدر تضيف كارت أو محفظة، تحذف وسيلة قديمة، أو تختار وسيلة افتراضية حسب الاختيارات المتاحة.",
+      "question_en": "How do I add or update a payment method?",
+      "aliases_en": [
+        "Where can I add a card?",
+        "How do I change my wallet?",
+        "Where are payment methods?"
+      ],
+      "answer_en": "In your donor account, open Payment Methods. You can add a card or wallet, remove an old method, or set a default method depending on app options.",
+      "tags": [
+        "donor",
+        "payments",
+        "account"
+      ]
+    },
+    {
+      "id": "faq_017",
+      "question_ar": "هستلم إيصال بعد التبرع؟",
+      "aliases_ar": [
+        "الإيصال بيطلع إزاي؟",
+        "فين invoice بتاع التبرع؟",
+        "أحمل إيصال التبرع منين؟"
+      ],
+      "answer_ar": "أيوه، بعد نجاح التبرع النظام بيولد إيصال أو فاتورة رقمية، وتقدر تشوفها من سجل التبرعات أو صفحة تفاصيل العملية.",
+      "question_en": "Will I receive a donation invoice?",
+      "aliases_en": [
+        "Where is my donation receipt?",
+        "How do I download my invoice?",
+        "Will I get proof of donation?"
+      ],
+      "answer_en": "Yes. After a successful donation, the system generates a digital invoice or receipt. You can view it from Donation History or transaction details.",
+      "tags": [
+        "donor",
+        "invoice",
+        "receipt"
+      ]
+    },
+    {
+      "id": "faq_018",
+      "question_ar": "إزاي أشوف تبرعاتي القديمة؟",
+      "aliases_ar": [
+        "سجل التبرعات فين؟",
+        "أعرف اتبرعت بكام قبل كده؟",
+        "donation history منين؟"
+      ],
+      "answer_ar": "من صفحة سجل التبرعات في تطبيق المتبرع، هتشوف عملياتك السابقة وحالتها والفواتير المرتبطة بيها، وتقدر تستخدم الفلاتر حسب الوقت أو الجمعية أو المشروع.",
+      "question_en": "How can I view my donation history?",
+      "aliases_en": [
+        "Where is my donation history?",
+        "Can I see past donations?",
+        "Can I filter donations by charity or date?"
+      ],
+      "answer_en": "Open Donation History in the donor app to see previous donations, their status, related invoices, and filters by time, charity, or project when available.",
+      "tags": [
+        "donor",
+        "donation_history",
+        "tracking"
+      ]
+    },
+    {
+      "id": "faq_019",
+      "question_ar": "إزاي أتابع أثر التبرع؟",
+      "aliases_ar": [
+        "أعرف فلوسي راحت فين؟",
+        "أتابع نتيجة التبرع إزاي؟",
+        "هل في شفافية للمتبرع؟"
+      ],
+      "answer_ar": "نفع بيوفر للمتبرع سجل تبرعات وفواتير ومعلومات عن الجمعية أو الحملة. الهدف إنك تتابع مساهمتك بشكل أوضح بدل ما التبرع يبقى بدون تتبع.",
+      "question_en": "How can I track donation impact?",
+      "aliases_en": [
+        "How do I know where my money went?",
+        "Can I track my donation?",
+        "How does Nafaa provide transparency?"
+      ],
+      "answer_en": "Nafaa provides donors with donation history, invoices, and information about the selected charity or campaign to improve transparency and tracking.",
+      "tags": [
+        "donor",
+        "tracking",
+        "transparency"
+      ]
+    },
+    {
+      "id": "faq_020",
+      "question_ar": "هل أقدر أفضّل جمعية؟",
+      "aliases_ar": [
+        "أضيف جمعية للمفضلة إزاي؟",
+        "favorite charity فين؟",
+        "أتابع جمعية معينة؟"
+      ],
+      "answer_ar": "أيوه، من صفحة الجمعية تقدر تضيفها للمفضلة، وبعد كده ترجع لها بسهولة من قائمة الجمعيات المفضلة. تقدر كمان تشيلها من المفضلة.",
+      "question_en": "Can I favorite a charity?",
+      "aliases_en": [
+        "How do I add a charity to favorites?",
+        "Where are favorite charities?",
+        "Can I save a charity?"
+      ],
+      "answer_en": "Yes. From a charity page, you can add it to Favorites and access it later from your favorite charities list. You can also remove it when needed.",
+      "tags": [
+        "donor",
+        "favorites",
+        "charity"
+      ]
+    },
+    {
+      "id": "faq_021",
+      "question_ar": "أقدر أشوف تفاصيل جمعية أو حملة قبل التبرع؟",
+      "aliases_ar": [
+        "أعرف معلومات الجمعية منين؟",
+        "أشوف تفاصيل الحملة إزاي؟",
+        "قبل ما أتبرع أعرف إيه؟"
+      ],
+      "answer_ar": "أيوه، المتبرع يقدر يشوف صفحة الجمعية أو الحملة وفيها المعلومات المتاحة زي الوصف، الهدف، المشاريع، والتقدم قبل ما يقرر يتبرع.",
+      "question_en": "Can I view charity or campaign details before donating?",
+      "aliases_en": [
+        "Where can I see charity information?",
+        "Can I review campaign details?",
+        "What can I see before donating?"
+      ],
+      "answer_en": "Yes. Donors can view a charity or campaign page with details such as description, purpose, projects, and progress before donating.",
+      "tags": [
+        "donor",
+        "charity",
+        "campaigns"
+      ]
+    },
+    {
+      "id": "faq_022",
+      "question_ar": "لو الدفع فشل أعمل إيه؟",
+      "aliases_ar": [
+        "عملية التبرع فشلت",
+        "الدفع ما تمش",
+        "فلوسي اتخصمت ومفيش إيصال"
+      ],
+      "answer_ar": "لو الدفع فشل، راجع بيانات الدفع أو استخدم وسيلة دفع تانية. لو حصل خصم ومفيش إيصال أو تأكيد، تواصل مع الدعم برقم العملية أو تفاصيل الدفع.",
+      "question_en": "What should I do if payment fails?",
+      "aliases_en": [
+        "My donation payment failed",
+        "The transaction did not complete",
+        "I was charged but got no receipt"
+      ],
+      "answer_en": "If payment fails, check your payment details or try another method. If you were charged without receiving a receipt or confirmation, contact support with transaction details.",
+      "tags": [
+        "donor",
+        "payments",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_023",
+      "question_ar": "إزاي أقدم طلب مساعدة كمستفيد؟",
+      "aliases_ar": [
+        "عايز أطلب مساعدة أعمل إيه؟",
+        "أقدم طلب دعم منين؟",
+        "إزاي أعمل طلب جديد؟"
+      ],
+      "answer_ar": "بعد تسجيل الدخول كمستفيد، افتح قسم الطلبات واختار طلب مساعدة. اختار الجمعية أو الجمعيات، حدد نوع الطلب، ارفع المستندات أو الصور المطلوبة، واكتب أو سجل وصف للمشكلة، ثم اضغط إرسال.",
+      "question_en": "How do I submit an assistance request?",
+      "aliases_en": [
+        "How can I apply for aid?",
+        "Where do I request support?",
+        "How do I create a new request?"
+      ],
+      "answer_en": "After logging in as a recipient, open Requests and choose an assistance request. Select the charity or charities, choose request type, upload required evidence, add a written or voice description, then submit.",
+      "tags": [
+        "recipient",
+        "request",
+        "submission"
+      ]
+    },
+    {
+      "id": "faq_024",
+      "question_ar": "أسجل دخول كمستفيد إزاي؟",
+      "aliases_ar": [
+        "المستفيد يدخل بإيه؟",
+        "أدخل بالرقم القومي؟",
+        "تسجيل دخول المستفيد منين؟"
+      ],
+      "answer_ar": "المستفيد بيسجل الدخول باستخدام الرقم القومي وكلمة السر. لازم يكون مسجل ومربوط بجمعية واحدة على الأقل عشان يستخدم خدمات المستفيد.",
+      "question_en": "How do I log in as a recipient?",
+      "aliases_en": [
+        "What do recipients use to log in?",
+        "Can I log in with my National ID?",
+        "Where is recipient login?"
+      ],
+      "answer_en": "Recipients log in using their National ID and password. They must be registered and linked to at least one charity to access recipient services.",
+      "tags": [
+        "recipient",
+        "login",
+        "national_id"
+      ]
+    },
+    {
+      "id": "faq_025",
+      "question_ar": "لازم أكون تابع لجمعية؟",
+      "aliases_ar": [
+        "ينفع أقدم من غير جمعية؟",
+        "لازم جمعية تكون مسجلاني؟",
+        "مين يفتحلي حساب مستفيد؟"
+      ],
+      "answer_ar": "في نظام نفع، المستفيد لازم يكون مرتبط بجمعية واحدة على الأقل. الجمعية تقدر تسجل مستفيد جديد أو تربط مستفيد موجود بحسابها بعد مراجعة الحالة.",
+      "question_en": "Do I need to be linked to a charity?",
+      "aliases_en": [
+        "Can I apply without a charity?",
+        "Must a charity register me?",
+        "Who creates my recipient account?"
+      ],
+      "answer_en": "In Nafaa, each recipient must be linked to at least one charity. A charity can register a new recipient or link an existing recipient after reviewing the case.",
+      "tags": [
+        "recipient",
+        "charity_link",
+        "account"
+      ]
+    },
+    {
+      "id": "faq_026",
+      "question_ar": "إيه المستندات المطلوبة للطلب؟",
+      "aliases_ar": [
+        "أرفع إيه مع الطلب؟",
+        "هل لازم صور أو فواتير؟",
+        "الطلب محتاج أوراق إيه؟"
+      ],
+      "answer_ar": "المستندات بتختلف حسب نوع الطلب، لكن ممكن تشمل بطاقة رقم قومي، تقارير طبية، روشتات، فواتير، إثبات سكن، أو أي دليل يوضح الاحتياج. شاشة الطلب توضح المطلوب حسب النوع.",
+      "question_en": "What documents are required for a request?",
+      "aliases_en": [
+        "What should I upload?",
+        "Do I need bills or reports?",
+        "Which evidence is needed?"
+      ],
+      "answer_en": "Required documents depend on request type, but may include National ID, medical reports, prescriptions, bills, proof of residence, or evidence explaining the need. The request screen shows what is needed.",
+      "tags": [
+        "recipient",
+        "documents",
+        "evidence"
+      ]
+    },
+    {
+      "id": "faq_027",
+      "question_ar": "ينفع أرفع صور أو مستندات؟",
+      "aliases_ar": [
+        "أقدر أرفع صورة روشتة؟",
+        "أرفع مستند من الموبايل؟",
+        "هل الطلب يقبل صور؟"
+      ],
+      "answer_ar": "أيوه، تقدر ترفع صور أو مستندات كدليل مع الطلب. حاول تكون الصورة واضحة، كاملة، ومن غير قص أو إضاءة سيئة عشان تساعد المراجعة.",
+      "question_en": "Can I upload images or documents?",
+      "aliases_en": [
+        "Can I upload a prescription photo?",
+        "Can I attach documents from my phone?",
+        "Does the request accept images?"
+      ],
+      "answer_en": "Yes. You can upload images or documents as evidence with your request. Try to make them clear, complete, and well-lit to help the review process.",
+      "tags": [
+        "recipient",
+        "uploads",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_028",
+      "question_ar": "ينفع أسجل فويس بدل ما أكتب؟",
+      "aliases_ar": [
+        "أقدر أشرح المشكلة بصوتي؟",
+        "هل في voice note؟",
+        "مش عارف أكتب أعمل إيه؟"
+      ],
+      "answer_ar": "أيوه، نفع بيدعم إنك تضيف وصف صوتي للطلب. النظام يحوله لنص عشان موظف الجمعية يقدر يراجعه مع باقي المستندات.",
+      "question_en": "Can I submit a voice note instead of typing?",
+      "aliases_en": [
+        "Can I explain by voice?",
+        "Does Nafaa support voice notes?",
+        "I cannot type, can I record audio?"
+      ],
+      "answer_en": "Yes. Nafaa supports adding a voice description. The system can convert it to text so charity staff can review it with the evidence.",
+      "tags": [
+        "recipient",
+        "voice_note",
+        "speech_to_text"
+      ]
+    },
+    {
+      "id": "faq_029",
+      "question_ar": "إيه أنواع الطلبات اللي أقدر أقدمها؟",
+      "aliases_ar": [
+        "أطلب مساعدة في إيه؟",
+        "في طلب طبي أو تعليمي؟",
+        "هل ينفع طلب سكن؟"
+      ],
+      "answer_ar": "حسب إعدادات الجمعية، الطلبات ممكن تشمل مساعدة مالية، طبية، تعليمية، سكن، أو طلب تعديل بيانات الحالة. التطبيق يعرض الأنواع المتاحة عند إنشاء الطلب.",
+      "question_en": "What types of requests can I submit?",
+      "aliases_en": [
+        "What support can I request?",
+        "Are medical or education requests available?",
+        "Can I request housing support?"
+      ],
+      "answer_en": "Depending on charity setup, requests may include financial, medical, education, housing support, or a case-information edit request. The app shows available types when creating a request.",
+      "tags": [
+        "recipient",
+        "request_types"
+      ]
+    },
+    {
+      "id": "faq_030",
+      "question_ar": "أقدر أختار الجمعية اللي أبعتلها الطلب؟",
+      "aliases_ar": [
+        "أبعت الطلب لأي جمعية؟",
+        "هل أقدر أختار أكتر من جمعية؟",
+        "لو تابع لأكتر من جمعية أعمل إيه؟"
+      ],
+      "answer_ar": "أيوه، لو أنت مرتبط بأكتر من جمعية، تقدر تختار الجمعية أو الجمعيات اللي عايز تبعتلها الطلب من شاشة تقديم الطلب.",
+      "question_en": "Can I choose which charity receives my request?",
+      "aliases_en": [
+        "Can I send my request to a selected charity?",
+        "Can I choose multiple charities?",
+        "What if I am linked to more than one charity?"
+      ],
+      "answer_en": "Yes. If you are linked to more than one charity, you can select the charity or charities that should receive your request from the submission screen.",
+      "tags": [
+        "recipient",
+        "request",
+        "charity_link"
+      ]
+    },
+    {
+      "id": "faq_031",
+      "question_ar": "بعد ما أبعت الطلب بيحصل إيه؟",
+      "aliases_ar": [
+        "الطلب بيروح فين بعد الإرسال؟",
+        "حالة الطلب بتبقى إيه؟",
+        "مين بيراجع طلبي؟"
+      ],
+      "answer_ar": "بعد الإرسال، النظام يسجل الطلب ويخلي حالته قيد المراجعة أو In Progress. الطلب والمستندات بتظهر لموظفي الجمعية المصرح لهم للمراجعة واتخاذ القرار.",
+      "question_en": "What happens after I submit a request?",
+      "aliases_en": [
+        "Where does my request go?",
+        "What is the status after submit?",
+        "Who reviews my request?"
+      ],
+      "answer_en": "After submission, the system records the request and sets it to In Progress or under review. The request and evidence become available to authorized charity staff for review.",
+      "tags": [
+        "recipient",
+        "request",
+        "status"
+      ]
+    },
+    {
+      "id": "faq_032",
+      "question_ar": "إزاي أتابع حالة طلبي؟",
+      "aliases_ar": [
+        "أشوف طلبي وصل لفين؟",
+        "حالة الطلب فين؟",
+        "request history منين؟"
+      ],
+      "answer_ar": "من صفحة طلباتي أو سجل الطلبات، هتشوف كل طلباتك وحالة كل طلب مثل قيد المراجعة، مقبول، مرفوض، أو راجع لاستكمال بيانات. تفاصيل السبب تظهر داخل الطلب.",
+      "question_en": "How do I track my request status?",
+      "aliases_en": [
+        "Where can I see request progress?",
+        "How do I know if my request was approved?",
+        "Where is request history?"
+      ],
+      "answer_en": "From My Requests or Request History, you can view each request status such as In Progress, Approved, Rejected, or Returned for clarification. Reasons appear in request details.",
+      "tags": [
+        "recipient",
+        "tracking",
+        "status"
+      ]
+    },
+    {
+      "id": "faq_033",
+      "question_ar": "معنى الطلب قيد المراجعة إيه؟",
+      "aliases_ar": [
+        "In Progress يعني إيه؟",
+        "طلبي تحت المراجعة يعني إيه؟",
+        "قيد المراجعة ده مقبول؟"
+      ],
+      "answer_ar": "قيد المراجعة أو In Progress معناه إن الطلب اتسجل ووصل للجمعية، ولسه موظفين الجمعية بيراجعوا التفاصيل والمستندات قبل القرار النهائي.",
+      "question_en": "What does In Progress mean?",
+      "aliases_en": [
+        "What does under review mean?",
+        "Is In Progress approved?",
+        "Does under review mean accepted?"
+      ],
+      "answer_en": "In Progress or under review means the request has been received by the charity, but staff are still reviewing details and evidence before the final decision.",
+      "tags": [
+        "recipient",
+        "status"
+      ]
+    },
+    {
+      "id": "faq_034",
+      "question_ar": "لو طلبي اترفض أعمل إيه؟",
+      "aliases_ar": [
+        "الطلب مرفوض ليه؟",
+        "أقدر أقدم تاني بعد الرفض؟",
+        "أشوف سبب الرفض فين؟"
+      ],
+      "answer_ar": "لو الطلب اترفض، افتح تفاصيل الطلب وشوف سبب الرفض أو ملاحظات الموظف. حسب السبب، ممكن تقدم طلب جديد أو تستكمل النواقص لو النظام والجمعية يسمحوا بذلك.",
+      "question_en": "What should I do if my request is rejected?",
+      "aliases_en": [
+        "Why was my request rejected?",
+        "Can I apply again after rejection?",
+        "Where can I see the rejection reason?"
+      ],
+      "answer_en": "If rejected, open the request details to view the reason or staff notes. Depending on the reason, you may submit a new request or complete missing information if allowed.",
+      "tags": [
+        "recipient",
+        "rejection"
+      ]
+    },
+    {
+      "id": "faq_035",
+      "question_ar": "معنى الطلب Returned إيه؟",
+      "aliases_ar": [
+        "طلب راجع يعني إيه؟",
+        "الجمعية طالبة مستندات زيادة",
+        "اتطلب مني أوضح بيانات"
+      ],
+      "answer_ar": "Returned معناه إن موظف الجمعية محتاج توضيح أو مستندات إضافية قبل القرار. افتح الطلب، اقرأ سبب الإرجاع، ارفع المطلوب أو عدل الوصف، ثم أعد الإرسال.",
+      "question_en": "What does Returned request mean?",
+      "aliases_en": [
+        "Why was my request returned?",
+        "The charity asked for more information",
+        "What should I do with a returned request?"
+      ],
+      "answer_en": "Returned means charity staff need clarification or extra documents before a decision. Open the request, read the reason, upload what is needed or edit the description, then resubmit.",
+      "tags": [
+        "recipient",
+        "returned_request",
+        "resubmission"
+      ]
+    },
+    {
+      "id": "faq_036",
+      "question_ar": "إزاي أعيد إرسال طلب راجع؟",
+      "aliases_ar": [
+        "أعمل resubmit إزاي؟",
+        "أرفع مستندات جديدة لطلب راجع",
+        "إعادة تقديم الطلب فين؟"
+      ],
+      "answer_ar": "افتح الطلب الراجع من سجل الطلبات، راجع ملاحظات الجمعية، ارفع المستندات أو الصور الجديدة، عدل الوصف أو سجل فويس جديد لو محتاج، وبعدها اضغط إعادة إرسال.",
+      "question_en": "How do I resubmit a returned request?",
+      "aliases_en": [
+        "How do I resubmit after clarification?",
+        "Where do I upload new evidence?",
+        "How do I edit a returned request?"
+      ],
+      "answer_en": "Open the returned request from Request History, review charity notes, upload new documents or images, edit the description or add a voice note if needed, then press Resubmit.",
+      "tags": [
+        "recipient",
+        "resubmission",
+        "uploads"
+      ]
+    },
+    {
+      "id": "faq_037",
+      "question_ar": "هل أقدر أعدل الطلب بعد الإرسال؟",
+      "aliases_ar": [
+        "أغير بيانات الطلب إزاي؟",
+        "نسيت أرفع ملف أعمل إيه؟",
+        "أضيف دليل جديد للطلب؟"
+      ],
+      "answer_ar": "لو الطلب لسه في مرحلة تسمح بالتعديل أو راجع لاستكمال بيانات، تقدر تفتحه وتعدل البيانات أو ترفع ملفات جديدة. لو القرار النهائي صدر، غالبا هتحتاج طلب جديد حسب سياسة الجمعية.",
+      "question_en": "Can I edit a request after submitting it?",
+      "aliases_en": [
+        "How do I change request details?",
+        "I forgot to upload a file",
+        "Can I add new evidence after submission?"
+      ],
+      "answer_en": "If the request is still in an editable stage or returned for clarification, you can update details or upload new files. If a final decision was made, you may need a new request.",
+      "tags": [
+        "recipient",
+        "editing",
+        "request"
+      ]
+    },
+    {
+      "id": "faq_038",
+      "question_ar": "إزاي أعرف إن المساعدة اتصرفت؟",
+      "aliases_ar": [
+        "الدعم نزل ولا لأ؟",
+        "أعرف النقط اتضافت إزاي؟",
+        "disbursement status فين؟"
+      ],
+      "answer_ar": "هيوصلك إشعار لما حالة الطلب تتغير أو لما النقط تتضاف للكارت الافتراضي. كمان تقدر تراجع تفاصيل الطلب وسجل النقط أو المعاملات من التطبيق.",
+      "question_en": "How will I know when aid is disbursed?",
+      "aliases_en": [
+        "How do I know support was added?",
+        "Will I get a notification after approval?",
+        "Where can I see disbursement status?"
+      ],
+      "answer_en": "You will receive a notification when request status changes or points are added to your virtual card. You can also review request details and points or transaction history in the app.",
+      "tags": [
+        "recipient",
+        "disbursement",
+        "notifications"
+      ]
+    },
+    {
+      "id": "faq_039",
+      "question_ar": "القرار بياخد وقت قد إيه؟",
+      "aliases_ar": [
+        "الطلب هيتراجع إمتى؟",
+        "هستنى قد إيه على الرد؟",
+        "مدة مراجعة الطلب كام؟"
+      ],
+      "answer_ar": "مدة المراجعة بتختلف حسب نوع الطلب، ضغط الطلبات، واكتمال المستندات. تابع حالة الطلب من التطبيق، وأي تحديث أو طلب توضيح هيوصلك في الإشعارات.",
+      "question_en": "How long does request review take?",
+      "aliases_en": [
+        "When will my request be reviewed?",
+        "How many days until approval?",
+        "Why is my request taking time?"
+      ],
+      "answer_en": "Review time depends on request type, workload, and document completeness. Track the request in the app, and any update or clarification request will be sent through notifications.",
+      "tags": [
+        "recipient",
+        "sla",
+        "tracking"
+      ]
+    },
+    {
+      "id": "faq_040",
+      "question_ar": "إزاي أشوف بياناتي الشخصية؟",
+      "aliases_ar": [
+        "البروفايل فين؟",
+        "أشوف بيانات الأسرة منين؟",
+        "أراجع بياناتي كمستفيد إزاي؟"
+      ],
+      "answer_ar": "من صفحة البروفايل أو البيانات الشخصية في تطبيق المستفيد، تقدر تشوف بياناتك الأساسية، معلومات الأسرة، السكن، التاريخ الطبي، والجمعيات المرتبطة بيك حسب المتاح.",
+      "question_en": "How do I view my profile information?",
+      "aliases_en": [
+        "Where is my profile?",
+        "How can I see family information?",
+        "Can I see housing and medical records?"
+      ],
+      "answer_en": "From Profile or Personal Information in the recipient app, you can view basic details, family information, housing data, medical history, and linked charities when available.",
+      "tags": [
+        "recipient",
+        "profile"
+      ]
+    },
+    {
+      "id": "faq_041",
+      "question_ar": "أقدر أطلب تعديل بياناتي؟",
+      "aliases_ar": [
+        "بياناتي غلط أعمل إيه؟",
+        "أغير معلومات الأسرة إزاي؟",
+        "أحدث بيانات السكن أو الصحة؟"
+      ],
+      "answer_ar": "أيوه، تقدر تقدم طلب تعديل بيانات من التطبيق، تختار الجمعية المعنية، وترفع مستندات أو صور تثبت التعديل، وتكتب أو تسجل وصف للسبب.",
+      "question_en": "Can I request changes to my information?",
+      "aliases_en": [
+        "My profile data is wrong, what should I do?",
+        "How do I update family information?",
+        "How do I update housing or medical records?"
+      ],
+      "answer_en": "Yes. You can submit an information edit request, choose the relevant charity, upload documents or images proving the change, and add a written or voice explanation.",
+      "tags": [
+        "recipient",
+        "profile",
+        "edit_request"
+      ]
+    },
+    {
+      "id": "faq_042",
+      "question_ar": "إزاي أشوف الجمعيات المرتبط بيها؟",
+      "aliases_ar": [
+        "أنا تابع لأنهي جمعية؟",
+        "my charities فين؟",
+        "linked charities"
+      ],
+      "answer_ar": "من قسم البيانات الشخصية أو جمعياتي في تطبيق المستفيد، تقدر تشوف الجمعيات المرتبط بيها وحالة علاقتك بكل جمعية إذا كانت مفتوحة أو مغلقة.",
+      "question_en": "How can I view my linked charities?",
+      "aliases_en": [
+        "Which charities am I linked to?",
+        "Where are my charities?",
+        "Can I see if my case is open or closed?"
+      ],
+      "answer_en": "From Personal Information or My Charities, you can view charities linked to your profile and the relationship status with each charity, such as open or closed.",
+      "tags": [
+        "recipient",
+        "charity_link"
+      ]
+    },
+    {
+      "id": "faq_043",
+      "question_ar": "الكارت الافتراضي ده إيه؟",
+      "aliases_ar": [
+        "virtual card يعني إيه؟",
+        "كارت نفع بيشتغل إزاي؟",
+        "إيه فايدة الكارت الافتراضي؟"
+      ],
+      "answer_ar": "الكارت الافتراضي في نفع وسيلة رقمية لاستلام واستخدام الدعم كنقط عند شركاء معتمدين. الهدف صرف المساعدة بشكل غير نقدي ومناسب للغرض المحدد زي أكل أو علاج أو ملابس.",
+      "question_en": "What is the virtual card?",
+      "aliases_en": [
+        "What does virtual card mean?",
+        "How does Nafaa card work?",
+        "Why do recipients have a virtual card?"
+      ],
+      "answer_en": "The Nafaa virtual card is a digital way for recipients to receive and use aid as points at approved partner stores for intended categories such as food, medical needs, or clothing.",
+      "tags": [
+        "recipient",
+        "virtual_card",
+        "points"
+      ]
+    },
+    {
+      "id": "faq_044",
+      "question_ar": "إزاي أشوف رصيد النقط؟",
+      "aliases_ar": [
+        "النقط بتاعتي فين؟",
+        "رصيد الكارت كام؟",
+        "points summary فين؟"
+      ],
+      "answer_ar": "من صفحة الكارت الافتراضي أو النقط، هتشوف إجمالي النقط المتاحة وتفصيلها حسب النوع أو الجمعية أو فئة الشريك حسب المعروض في التطبيق.",
+      "question_en": "How do I check my points balance?",
+      "aliases_en": [
+        "Where can I see my points?",
+        "How much balance is on my virtual card?",
+        "Where is points summary?"
+      ],
+      "answer_en": "From the Virtual Card or Points page, you can view total available points and a breakdown by type, charity, or partner category depending on what the app displays.",
+      "tags": [
+        "recipient",
+        "virtual_card",
+        "points"
+      ]
+    },
+    {
+      "id": "faq_045",
+      "question_ar": "النقط بتستخدم في إيه؟",
+      "aliases_ar": [
+        "أصرف النقط على إيه؟",
+        "هل أقدر أشتري أي حاجة بالنقط؟",
+        "النقط مخصصة لأكل ولا علاج؟"
+      ],
+      "answer_ar": "النقط ممكن تكون مرتبطة بفئة معينة حسب الدعم المضاف، زي طعام أو علاج أو ملابس. عند الصرف، النظام يتأكد إن فئة النقط مناسبة لنوع الشريك قبل إتمام العملية.",
+      "question_en": "What can points be used for?",
+      "aliases_en": [
+        "Can I buy anything with points?",
+        "What are point categories?",
+        "Are points restricted?"
+      ],
+      "answer_en": "Points may be linked to a specific aid category such as food, medical support, or clothing. During redemption, the system checks that the point category matches the partner store type.",
+      "tags": [
+        "recipient",
+        "points",
+        "categories"
+      ]
+    },
+    {
+      "id": "faq_046",
+      "question_ar": "إزاي أستخدم الكارت عند شريك؟",
+      "aliases_ar": [
+        "أصرف النقط في المحل إزاي؟",
+        "الشراء بالكارت الافتراضي بيتم إزاي؟",
+        "أدي الموظف إيه عند الدفع؟"
+      ],
+      "answer_ar": "عند الشريك، موظف الشريك يدخل بيانات الكارت المطلوبة وقيمة العملية، ثم المستفيد يؤكد بالـ PIN. النظام يتحقق من الكارت والرصيد ونوع النقط، وبعد النجاح تتخصم النقط وتتسجل المعاملة.",
+      "question_en": "How do I use the virtual card at a partner store?",
+      "aliases_en": [
+        "How do I redeem points in a store?",
+        "How does partner redemption work?",
+        "How do I buy using points?"
+      ],
+      "answer_en": "At a partner store, partner staff enter the required card details and amount, then the recipient confirms with the PIN. The system validates the card, balance, and category, then deducts points and records the transaction.",
+      "tags": [
+        "recipient",
+        "virtual_card",
+        "redemption",
+        "partner"
+      ]
+    },
+    {
+      "id": "faq_047",
+      "question_ar": "الـ PIN بتاع الكارت أعمله إزاي؟",
+      "aliases_ar": [
+        "أحدد رقم سري للكارت منين؟",
+        "Set PIN فين؟",
+        "أول مرة أستخدم الكارت أعمل إيه؟"
+      ],
+      "answer_ar": "افتح صفحة الكارت الافتراضي واختار Set PIN أو تعيين الرقم السري. اكتب PIN مكون من 4 أرقام، وبعد التحقق من الصيغة يتفعل الكارت حسب قواعد النظام.",
+      "question_en": "How do I set the virtual card PIN?",
+      "aliases_en": [
+        "Where do I create a card PIN?",
+        "How do I activate my virtual card?",
+        "How do I set a 4-digit PIN?"
+      ],
+      "answer_en": "Open the Virtual Card page and choose Set PIN. Enter a 4-digit PIN, and after validation the card is activated according to system rules.",
+      "tags": [
+        "recipient",
+        "virtual_card",
+        "pin"
+      ]
+    },
+    {
+      "id": "faq_048",
+      "question_ar": "نسيت PIN الكارت أعمل إيه؟",
+      "aliases_ar": [
+        "الرقم السري للكارت ضاع",
+        "Reset PIN فين؟",
+        "مش فاكر رقم الكارت السري"
+      ],
+      "answer_ar": "من صفحة الكارت الافتراضي اختار Reset PIN أو Forgot PIN. النظام يتحقق من هويتك كمستخدم مسجل، وبعدها تقدر تعين PIN جديد مكون من 4 أرقام.",
+      "question_en": "What if I forget my virtual card PIN?",
+      "aliases_en": [
+        "I forgot my card PIN",
+        "How do I reset the PIN?",
+        "Where is Forgot PIN?"
+      ],
+      "answer_en": "From the Virtual Card page, choose Reset PIN or Forgot PIN. The system verifies your logged-in identity, then lets you set a new 4-digit PIN.",
+      "tags": [
+        "recipient",
+        "virtual_card",
+        "pin"
+      ]
+    },
+    {
+      "id": "faq_049",
+      "question_ar": "ليش عملية النقط اترفضت؟",
+      "aliases_ar": [
+        "المحل رفض الكارت",
+        "النقط مش راضية تتصرف",
+        "redemption failed"
+      ],
+      "answer_ar": "عملية الصرف ممكن تترفض لو الكارت غير مفعل، الرصيد غير كافي، الـ PIN غلط، أو نوع النقط لا يناسب نوع الشريك. راجع البيانات أو تواصل مع الدعم لو المشكلة مستمرة.",
+      "question_en": "Why did my point redemption fail?",
+      "aliases_en": [
+        "The partner store rejected my card",
+        "Points could not be redeemed",
+        "Why was my transaction rejected?"
+      ],
+      "answer_en": "Redemption may fail if the card is inactive, balance is insufficient, the PIN is incorrect, or the point category does not match the partner type. Review the details or contact support.",
+      "tags": [
+        "recipient",
+        "redemption",
+        "error"
+      ]
+    },
+    {
+      "id": "faq_050",
+      "question_ar": "هل النقط بتتخصم فورًا؟",
+      "aliases_ar": [
+        "بعد الشراء الرصيد بينقص؟",
+        "المعاملة بتتسجل؟",
+        "هل هيوصلني إشعار بالصرف؟"
+      ],
+      "answer_ar": "بعد عملية صرف ناجحة، النقط بتتخصم من الرصيد، والمعاملة بتتسجل في النظام، والمستفيد ممكن يستلم إشعار بتفاصيل العملية حسب إعدادات الإشعارات.",
+      "question_en": "Are points deducted immediately after redemption?",
+      "aliases_en": [
+        "Does balance decrease after purchase?",
+        "Is the transaction recorded?",
+        "Will I get a redemption notification?"
+      ],
+      "answer_en": "After successful redemption, points are deducted, the transaction is recorded, and the recipient may receive a notification with details depending on settings.",
+      "tags": [
+        "recipient",
+        "points",
+        "transactions"
+      ]
+    },
+    {
+      "id": "faq_051",
+      "question_ar": "الإشعارات بتوصلني إمتى؟",
+      "aliases_ar": [
+        "هيوصلني notification في إيه؟",
+        "SMS بيجي فين؟",
+        "إشعار تغيير حالة الطلب"
+      ],
+      "answer_ar": "نفع يرسل إشعارات للمستفيد عند تغيير حالة الطلب، طلب توضيح، إضافة أو خصم نقط، أو نجاح عملية صرف. وللمتبرع عند نجاح التبرع، الفاتورة، أو قبل التبرع الشهري المجدول.",
+      "question_en": "When will I receive notifications?",
+      "aliases_en": [
+        "What notifications does Nafaa send?",
+        "Will I get SMS updates?",
+        "Do donors get scheduled donation reminders?"
+      ],
+      "answer_en": "Nafaa sends notifications to recipients for request status changes, clarification requests, point updates, or redemption. Donors may receive donation confirmations, invoices, and scheduled donation reminders.",
+      "tags": [
+        "notifications",
+        "recipient",
+        "donor"
+      ]
+    },
+    {
+      "id": "faq_052",
+      "question_ar": "لو نسيت كلمة السر أعمل إيه؟",
+      "aliases_ar": [
+        "password ضاع",
+        "مش فاكر الباسورد",
+        "استرجاع الحساب"
+      ],
+      "answer_ar": "اختار نسيت كلمة السر من شاشة تسجيل الدخول، واتبع خطوات التحقق عبر الموبايل أو الإيميل حسب حسابك، وبعدها تقدر تعين كلمة سر جديدة.",
+      "question_en": "What should I do if I forget my password?",
+      "aliases_en": [
+        "I forgot my password",
+        "How do I reset my password?",
+        "How can I recover my account?"
+      ],
+      "answer_en": "Choose Forgot Password from the login screen and follow verification through phone or email depending on your account. Then set a new password.",
+      "tags": [
+        "account",
+        "security",
+        "password"
+      ]
+    },
+    {
+      "id": "faq_053",
+      "question_ar": "هل بياناتي الشخصية آمنة؟",
+      "aliases_ar": [
+        "بياناتي محفوظة؟",
+        "مين يقدر يشوف ملفي؟",
+        "هل الرقم القومي آمن؟"
+      ],
+      "answer_ar": "نفع مصمم للتعامل مع بيانات حساسة مثل الرقم القومي، بيانات الأسرة، السكن، التاريخ الطبي، المستندات، والتبرعات من خلال صلاحيات وصول محددة وسجلات متابعة.",
+      "question_en": "Is my personal data protected?",
+      "aliases_en": [
+        "Who can see my data?",
+        "Is my National ID safe?",
+        "How does Nafaa protect privacy?"
+      ],
+      "answer_en": "Nafaa is designed to handle sensitive data such as National IDs, family data, housing data, medical history, documents, and donations through role-based access and audit logs.",
+      "tags": [
+        "privacy",
+        "security",
+        "data"
+      ]
+    },
+    {
+      "id": "faq_054",
+      "question_ar": "مين يقدر يشوف مستنداتي؟",
+      "aliases_ar": [
+        "الصور اللي برفعها بتروح لمين؟",
+        "هل المتبرع يشوف أوراقي؟",
+        "هل كل الموظفين يشوفوا مستنداتي؟"
+      ],
+      "answer_ar": "المستندات والأدلة تظهر فقط للجهات أو الموظفين المصرح لهم حسب الصلاحيات ودورهم في مراجعة الطلب. الهدف حماية خصوصية المستفيد مع تمكين المراجعة المطلوبة.",
+      "question_en": "Who can view my uploaded documents?",
+      "aliases_en": [
+        "Who sees my evidence files?",
+        "Can donors see my documents?",
+        "Are uploaded files private?"
+      ],
+      "answer_en": "Recipient documents and evidence are only available to authorized users according to role and permissions for request review. The goal is to protect privacy while enabling verification.",
+      "tags": [
+        "recipient",
+        "documents",
+        "privacy"
+      ]
+    },
+    {
+      "id": "faq_055",
+      "question_ar": "هل الذكاء الاصطناعي بيقرأ المستندات؟",
+      "aliases_ar": [
+        "OCR بيعمل إيه؟",
+        "هل النظام يطلع بيانات من الصورة؟",
+        "إيه دور OCR في الطلب؟"
+      ],
+      "answer_ar": "أيوه، نفع يستخدم OCR واستخراج نصوص للمساعدة في قراءة المستندات والصور، لكن النتائج بتستخدم كدعم للمراجعة وليست قرار نهائي.",
+      "question_en": "Does AI read uploaded documents?",
+      "aliases_en": [
+        "What does OCR do?",
+        "Does the system extract text from images?",
+        "What is OCR used for?"
+      ],
+      "answer_en": "Yes. Nafaa uses OCR and text extraction to help read documents and images, but the output is used only as review support and not as a final decision.",
+      "tags": [
+        "ai",
+        "ocr",
+        "documents"
+      ]
+    },
+    {
+      "id": "faq_056",
+      "question_ar": "هل النظام بيكشف التكرار أو التلاعب؟",
+      "aliases_ar": [
+        "هل في fraud detection؟",
+        "لو الصورة مكررة؟",
+        "هل بيتحقق من الأدلة؟"
+      ],
+      "answer_ar": "نفع يستخدم فحوصات مساعدة لاكتشاف احتمالية التكرار أو التلاعب أو عدم الاتساق في الأدلة. هذه الفحوصات تساعد الموظفين، لكنها لا ترفض الطلب وحدها بدون مراجعة بشرية.",
+      "question_en": "Does the system detect duplicate or manipulated evidence?",
+      "aliases_en": [
+        "Is there fraud detection?",
+        "Can Nafaa detect reused images?",
+        "Are documents verified?"
+      ],
+      "answer_en": "Nafaa uses support checks to detect possible duplication, manipulation, or inconsistency in evidence. These checks assist staff but do not reject a request alone without human review.",
+      "tags": [
+        "ai",
+        "fraud_detection",
+        "evidence"
+      ]
+    },
+    {
+      "id": "faq_057",
+      "question_ar": "إيه التقرير اللي بيطلع للطلب؟",
+      "aliases_ar": [
+        "AI report يعني إيه؟",
+        "هل النظام يلخص الطلب؟",
+        "الموظف بيشوف تقرير إيه؟"
+      ],
+      "answer_ar": "النظام ممكن يولد تقرير مساعد لموظف الجمعية يحتوي على ملخص الطلب، النص المستخرج، ملاحظات جودة الأدلة، مؤشرات خطر أو عدم اتساق، وتوصيات للمراجعة. التقرير للمساعدة فقط.",
+      "question_en": "What is the AI request report?",
+      "aliases_en": [
+        "What does the AI report include?",
+        "Does the system summarize my request?",
+        "What report do charity staff see?"
+      ],
+      "answer_en": "The system may generate a support report for charity staff containing a request summary, extracted text, evidence quality notes, risk or inconsistency indicators, and review recommendations. It is for assistance only.",
+      "tags": [
+        "ai",
+        "report_generation"
+      ]
+    },
+    {
+      "id": "faq_058",
+      "question_ar": "هل أقدر أقدم طلب طوارئ؟",
+      "aliases_ar": [
+        "عندي حالة عاجلة أعمل إيه؟",
+        "emergency request منين؟",
+        "هل حالات الطوارئ لها أولوية؟"
+      ],
+      "answer_ar": "لو نوع الطلب المتاح يسمح بالطوارئ، اختار النوع المناسب ووضح سبب الاستعجال وارفع الأدلة المطلوبة. الطلبات العاجلة يتم تمييزها للمراجعة، لكن لازم تتحقق الجمعية من البيانات.",
+      "question_en": "Can I submit an emergency request?",
+      "aliases_en": [
+        "I have an urgent case, what should I do?",
+        "Where is emergency request?",
+        "Are emergencies prioritized?"
+      ],
+      "answer_en": "If the available request type supports emergencies, choose it, explain the urgency, and upload required evidence. Urgent requests are flagged for review, but the charity still verifies the data.",
+      "tags": [
+        "recipient",
+        "emergency",
+        "request"
+      ]
+    },
+    {
+      "id": "faq_059",
+      "question_ar": "أقدر أطلب مساعدة طبية؟",
+      "aliases_ar": [
+        "طلب علاج منين؟",
+        "مساعدة أدوية إزاي؟",
+        "عايز دعم عملية أو جهاز طبي"
+      ],
+      "answer_ar": "لو المساعدة الطبية متاحة عند الجمعية، قدم طلب طبي وارفع التقارير أو الروشتات أو الفواتير الطبية المطلوبة، واكتب وصف واضح للحالة والاحتياج.",
+      "question_en": "Can I request medical support?",
+      "aliases_en": [
+        "How do I request treatment support?",
+        "Can I apply for medicine aid?",
+        "Can Nafaa help with surgery or medical devices?"
+      ],
+      "answer_en": "If medical support is available through the charity, submit a medical request, upload required reports, prescriptions, or bills, and write a clear description of the condition and need.",
+      "tags": [
+        "recipient",
+        "medical",
+        "request"
+      ]
+    },
+    {
+      "id": "faq_060",
+      "question_ar": "أقدر أطلب مساعدة تعليمية؟",
+      "aliases_ar": [
+        "طلب مصاريف مدرسة",
+        "مساعدة كتب أو أدوات مدرسية",
+        "أقدم طلب تعليم إزاي؟"
+      ],
+      "answer_ar": "لو الدعم التعليمي متاح، اختار طلب تعليمي وارفع ما يثبت الاحتياج مثل خطاب المدرسة أو الجامعة، المصاريف، أو المستندات المطلوبة حسب الحالة.",
+      "question_en": "Can I request education support?",
+      "aliases_en": [
+        "Can I request school fee support?",
+        "Can Nafaa help with books or school supplies?",
+        "How do education aid requests work?"
+      ],
+      "answer_en": "If education support is available, choose an education request and upload evidence such as a school or university letter, fee documents, or other required files.",
+      "tags": [
+        "recipient",
+        "education",
+        "request"
+      ]
+    },
+    {
+      "id": "faq_061",
+      "question_ar": "أقدر أطلب دعم سكن؟",
+      "aliases_ar": [
+        "مساعدة إيجار منين؟",
+        "طلب سكن إزاي؟",
+        "هل فيه مساعدة للسكن؟"
+      ],
+      "answer_ar": "لو دعم السكن متاح، قدم طلب سكن وارفع مستندات تثبت الاحتياج، مثل عقد إيجار أو إنذار أو إثبات عدم القدرة على السداد حسب ما تطلبه الجمعية.",
+      "question_en": "Can I request housing or rent support?",
+      "aliases_en": [
+        "How do I request rent aid?",
+        "Is housing support available?",
+        "What documents are needed for housing support?"
+      ],
+      "answer_en": "If housing support is available, submit a housing request and upload evidence such as a lease, notice, or proof of inability to pay depending on charity requirements.",
+      "tags": [
+        "recipient",
+        "housing",
+        "request"
+      ]
+    },
+    {
+      "id": "faq_062",
+      "question_ar": "هل أقدر أتبرع بحاجات عينية؟",
+      "aliases_ar": [
+        "أتبرع بملابس أو أدوية؟",
+        "في تبرع عيني؟",
+        "هل نفع يستلم حاجات؟"
+      ],
+      "answer_ar": "نفع أساسا يدير التبرعات والطلبات الرقمية وتتبعها. لو حملة أو جمعية بتقبل تبرعات عينية، هتظهر التعليمات من خلال صفحة الجمعية أو الحملة حسب المتاح.",
+      "question_en": "Can I donate items instead of money?",
+      "aliases_en": [
+        "Can I donate clothes or medicine?",
+        "Are in-kind donations supported?",
+        "Can I donate goods?"
+      ],
+      "answer_en": "Nafaa mainly manages digital donations, requests, and tracking. If a charity or campaign accepts in-kind donations, instructions should appear on the charity or campaign page when available.",
+      "tags": [
+        "donor",
+        "in_kind",
+        "scope"
+      ]
+    },
+    {
+      "id": "faq_063",
+      "question_ar": "هل نفع بيغطي التوصيل أو المخازن؟",
+      "aliases_ar": [
+        "هل التطبيق مسؤول عن الشحن؟",
+        "في توصيل مساعدات؟",
+        "هل نفع عنده مخزن؟"
+      ],
+      "answer_ar": "نطاق نفع يركز على إدارة الطلبات والتبرعات والتوزيع الرقمي والربط مع الشركاء. التوصيل الفعلي أو المخازن أو النقل خارج نطاق النظام الحالي ويتبع إجراءات الجمعيات أو الشركاء.",
+      "question_en": "Does Nafaa handle delivery or warehousing?",
+      "aliases_en": [
+        "Is the app responsible for shipping aid?",
+        "Does Nafaa deliver items?",
+        "Does Nafaa manage warehouses?"
+      ],
+      "answer_en": "Nafaa focuses on managing requests, donations, digital allocation, and partner redemption. Physical delivery, warehousing, or transportation are outside the current system scope.",
+      "tags": [
+        "general",
+        "scope",
+        "delivery"
+      ]
+    },
+    {
+      "id": "faq_064",
+      "question_ar": "هل أقدر أتبرع لحالة معينة؟",
+      "aliases_ar": [
+        "أختار مستفيد محدد؟",
+        "specific case donation",
+        "أدعم حالة معينة إزاي؟"
+      ],
+      "answer_ar": "حسب إعدادات الجمعية والحملة، ممكن تظهر حالات أو مشاريع مرتبطة بمستفيدين للمتبرع. لو الحالة متاحة، تقدر تختارها وتراجع التفاصيل المسموح بعرضها قبل التبرع.",
+      "question_en": "Can I donate to a specific case?",
+      "aliases_en": [
+        "Can I choose a specific recipient?",
+        "How do I support one case?",
+        "Are cases visible to donors?"
+      ],
+      "answer_en": "Depending on charity and campaign settings, specific cases or recipient-linked projects may be visible to donors. If available, you can select the case and review allowed details before donating.",
+      "tags": [
+        "donor",
+        "cases",
+        "privacy"
+      ]
+    },
+    {
+      "id": "faq_065",
+      "question_ar": "إزاي نفع بيحافظ على كرامة المستفيد؟",
+      "aliases_ar": [
+        "هل بيانات المستفيد بتتعرض للناس؟",
+        "خصوصية الحالة للمتبرعين",
+        "إزاي بتحموا المستفيد؟"
+      ],
+      "answer_ar": "نفع يقلل الحاجة للزيارات المتكررة والطوابير عن طريق تقديم الطلبات ومتابعتها رقميا، ويحمي بيانات المستفيدين بصلاحيات وصول. أي معلومات تعرض للمتبرعين تكون حسب سياسة الخصوصية.",
+      "question_en": "How does Nafaa protect recipient dignity?",
+      "aliases_en": [
+        "Are recipient details shown publicly?",
+        "Can donors see recipient private data?",
+        "How is aid made more dignified?"
+      ],
+      "answer_en": "Nafaa reduces repeated office visits and queues by allowing digital request submission and tracking, and protects recipient data through controlled access. Any donor-facing information follows privacy policy.",
+      "tags": [
+        "recipient",
+        "privacy",
+        "dignity"
+      ]
+    },
+    {
+      "id": "faq_066",
+      "question_ar": "هل أقدر أغير اللغة؟",
+      "aliases_ar": [
+        "أحول التطبيق لعربي أو إنجليزي؟",
+        "language settings فين؟",
+        "البرنامج بالعربي؟"
+      ],
+      "answer_ar": "لو اختيار اللغة متاح في إعدادات التطبيق، تقدر تبدل بين العربي والإنجليزي. الشات بوت نفسه معمول ليدعم أسئلة بالعربي والإنجليزي.",
+      "question_en": "Can I change the app language?",
+      "aliases_en": [
+        "How do I switch Arabic and English?",
+        "Where are language settings?",
+        "Is the app available in Arabic?"
+      ],
+      "answer_en": "If the language option is available in settings, you can switch between Arabic and English. The chatbot itself supports questions in both languages.",
+      "tags": [
+        "language",
+        "settings"
+      ]
+    },
+    {
+      "id": "faq_067",
+      "question_ar": "هل التطبيق مناسب للي خبرتهم قليلة بالموبايل؟",
+      "aliases_ar": [
+        "مش بعرف أستخدم تطبيقات كويس",
+        "هل في إرشاد أثناء الطلب؟",
+        "التطبيق سهل؟"
+      ],
+      "answer_ar": "نفع مصمم بواجهات بسيطة وموجهة حسب الدور، خصوصا للمستفيد. شاشة الطلب بتوجهك خطوة بخطوة، والشات بوت والإشعارات يساعدوك في الاستخدام والمتابعة.",
+      "question_en": "Is the app easy for users with limited technical experience?",
+      "aliases_en": [
+        "I am not good with apps, can I use Nafaa?",
+        "Does the request form guide me?",
+        "Is the recipient app simple?"
+      ],
+      "answer_en": "Nafaa is designed with simple, role-specific interfaces. The request screen guides recipients step by step, while the chatbot and notifications help with usage and follow-up.",
+      "tags": [
+        "ux",
+        "accessibility"
+      ]
+    },
+    {
+      "id": "faq_068",
+      "question_ar": "هل أكتب بياناتي السرية في الشات؟",
+      "aliases_ar": [
+        "أبعت PIN للبوت؟",
+        "أكتب رقم الكارت في الشات؟",
+        "هل أرسل CVV في المحادثة؟"
+      ],
+      "answer_ar": "لا ترسل PIN الكارت، CVV، كلمات السر، أو أي بيانات دفع حساسة في الشات. استخدم الشات للأسئلة العامة، وأدخل البيانات الحساسة فقط في الشاشات الرسمية داخل التطبيق.",
+      "question_en": "Should I send sensitive data in chat?",
+      "aliases_en": [
+        "Can I send my PIN to the bot?",
+        "Should I type my card number in chat?",
+        "Can I send CVV to the chatbot?"
+      ],
+      "answer_en": "Do not send card PINs, CVV, passwords, or sensitive payment data in chat. Use the chatbot for general questions and enter sensitive information only in official secure screens.",
+      "tags": [
+        "chatbot",
+        "security",
+        "privacy"
+      ]
+    },
+    {
+      "id": "faq_069",
+      "question_ar": "لو سؤالي مش موجود في الشات بوت؟",
+      "aliases_ar": [
+        "البوت مردش عليا",
+        "الشات بوت قال معندوش معلومات",
+        "مش لاقي إجابة"
+      ],
+      "answer_ar": "لو الشات بوت معندوش معلومات كافية، المفروض يقول إن الإجابة غير متاحة بدل ما يخمن. جرب تسأل بصياغة أوضح، أو تواصل مع الدعم لو السؤال خاص بحسابك أو طلبك.",
+      "question_en": "What if the chatbot does not know the answer?",
+      "aliases_en": [
+        "The bot did not answer me",
+        "The chatbot said it has no information",
+        "I cannot find an answer"
+      ],
+      "answer_en": "If the chatbot does not have enough information, it should say the answer is unavailable instead of guessing. Try asking more clearly, or contact support for account-specific questions.",
+      "tags": [
+        "chatbot",
+        "fallback",
+        "support"
+      ]
+    },
+    {
+      "id": "faq_070",
+      "question_ar": "إزاي أبدأ لو أنا مش عارف أستخدم نفع؟",
+      "aliases_ar": [
+        "أبدأ منين؟",
+        "أنا جديد في التطبيق",
+        "مش فاهم أعمل إيه"
+      ],
+      "answer_ar": "لو أنت مستفيد، ابدأ بتسجيل الدخول بالرقم القومي وكلمة السر ثم راجع البروفايل وقدم طلب من قسم الطلبات. لو أنت متبرع، سجل حساب أو سجل دخول، تصفح الجمعيات أو الحملات، ثم اختار هدف التبرع.",
+      "question_en": "How do I get started if I am new to Nafaa?",
+      "aliases_en": [
+        "Where should I start?",
+        "I am new to the app",
+        "What is the first step in Nafaa?"
+      ],
+      "answer_en": "If you are a recipient, log in with National ID and password, review your profile, and submit a request from Requests. If you are a donor, register or log in, browse charities or campaigns, then choose a donation target.",
+      "tags": [
+        "getting_started",
+        "recipient",
+        "donor"
+      ]
+    }
+  ]
+}

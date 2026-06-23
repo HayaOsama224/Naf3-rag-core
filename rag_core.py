@@ -39,7 +39,11 @@ import atexit
 from langdetect import detect
 from sentence_transformers import SentenceTransformer
 from huggingface_hub import hf_hub_download
-from llama_cpp import Llama
+try:
+    from llama_cpp import Llama
+except ImportError:
+    Llama = None
+
 from groq import Groq
 # -------------------------------
 # FAISS import (CPU or GPU build)
@@ -100,6 +104,8 @@ ENABLE_QWEN_FALLBACK = os.getenv("ENABLE_QWEN_FALLBACK", "1").strip() == "1"
 LOAD_QWEN_ON_STARTUP = os.getenv("LOAD_QWEN_ON_STARTUP", "0").strip() == "1"
 # History controls
 MAX_HISTORY_CHARS = int(os.getenv("MAX_HISTORY_CHARS", "900"))  # output paragraph_history limit
+
+
 def answer_query(question: str, top_k: int = TOP_K, history: Optional[List[Dict[str, str]]] = None):
     paragraph_history = ""
 
@@ -362,12 +368,16 @@ def get_groq_client():
         return None
 
 
-def get_llm() -> Llama:
+def get_llm():
     """
     Lazy local Qwen loader.
     Qwen is still kept in the project, but it will not load unless needed.
     """
     global LLM
+
+    if Llama is None:
+        print("[qwen] llama-cpp-python is not installed. Qwen fallback is unavailable.")
+        return None
 
     if LLM is not None:
         return LLM
@@ -467,52 +477,78 @@ def build_faq_messages(user_q: str, passages: List[Dict[str, Any]]) -> List[Dict
     lang = detect_lang(user_q or "")
 
     sys_en = (
-        "You are Naf3 Charity FAQ Assistant. Answer ONLY using the provided FAQ context. "
-        "If the requested information is NOT present verbatim in the context, "
-        f'reply EXACTLY: "{INSUFFICIENT_EN}". '
+        "You are Naf3 Charity FAQ Assistant. "
+        "Answer ONLY using the provided FAQ context. "
+        "If the answer can be reasonably inferred from the provided FAQ context, answer it. "
+        f'If the context is unrelated to the question, reply EXACTLY: "{INSUFFICIENT_EN}". '
         "Answer in the user's language."
     )
-    sys_ar = (
-    "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. أجب فقط من السياق المقدم. "
-    f'إذا لم تظهر المعلومة المطلوبة نصًا داخل السياق فأجِب نصًا: "{INSUFFICIENT_AR}". '
-    "أجب بلغة المستخدم."
-)
 
+    sys_ar = (
+        "أنت مساعد الأسئلة الشائعة لمنصة نفع الخيرية. "
+        "أجب فقط باستخدام سياق الأسئلة الشائعة المقدم. "
+        "إذا كان يمكن فهم الإجابة من السياق المقدم، أجب منها. "
+        f'إذا كان السياق غير مرتبط بالسؤال، فأجب نصًا: "{INSUFFICIENT_AR}". '
+        "أجب بلغة المستخدم."
+    )
 
     sys = sys_ar if lang == "ar" else sys_en
 
     seen = set()
     blocks = []
+
     for d in passages:
-        key = (d.get("lang"), d.get("question"), d.get("answer"), d.get("faq_id"))
+        key = (
+            d.get("lang"),
+            d.get("question"),
+            d.get("answer"),
+            d.get("faq_id"),
+        )
         if key in seen:
             continue
         seen.add(key)
 
-        cite = make_citation(d)
         q = d.get("question") or ""
         a = d.get("answer") or ""
+        aliases = d.get("aliases") or []
+        aliases_text = " | ".join(aliases)
+
         if d.get("lang") == "ar":
-            blocks.append(f"س: {q}\nج: {a}\nالمصدر: {a}")
+            blocks.append(
+                f"س: {q}\n"
+                f"صيغ مشابهة للسؤال: {aliases_text}\n"
+                f"ج: {a}\n"
+                f"المصدر: {make_citation(d)}"
+            )
         else:
-            blocks.append(f"Q: {q}\nA: {a}\nSource: {a}")
+            blocks.append(
+                f"Q: {q}\n"
+                f"Similar question forms: {aliases_text}\n"
+                f"A: {a}\n"
+                f"Source: {make_citation(d)}"
+            )
 
     ctx = truncate_ctx("\n\n---\n\n".join(blocks))
 
     if lang == "ar":
         user = (
             "أجب في جملة أو جملتين فقط بالاعتماد على السياق التالي. "
-            f'إن لم يكن الجواب موجودًا في السياق فأجِب نصًا: "{INSUFFICIENT_AR}".\n\n'
-            f"السؤال: {user_q}\n\nالسياق:\n{ctx}"
+            f'إذا كان السياق غير مرتبط بالسؤال، فأجب نصًا: "{INSUFFICIENT_AR}".\n\n'
+            f"السؤال: {user_q}\n\n"
+            f"السياق:\n{ctx}"
         )
     else:
         user = (
             "Answer in 1–2 sentences using ONLY the FAQ context below. "
-            f'If the answer isn’t in the context, reply EXACTLY: "{INSUFFICIENT_EN}".\n\n'
-            f"Question: {user_q}\n\nContext:\n{ctx}"
+            f'If the context is unrelated to the question, reply EXACTLY: "{INSUFFICIENT_EN}".\n\n'
+            f"Question: {user_q}\n\n"
+            f"Context:\n{ctx}"
         )
 
-    return [{"role": "system", "content": sys}, {"role": "user", "content": user}]
+    return [
+        {"role": "system", "content": sys},
+        {"role": "user", "content": user},
+    ]
 
 def _groq_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
     client = get_groq_client()
@@ -584,9 +620,6 @@ def llm_chat(messages: List[Dict[str, str]], max_tokens: int) -> str:
 # ===============================
 # Query rewrite (history-aware, no new facts)
 # ===============================
-import json
-import re
-from typing import Optional, Dict, Any
 
 JSON_OBJ_RE = re.compile(r"\{.*\}", re.DOTALL)
 
@@ -788,26 +821,29 @@ def enforce_arabic_only(text: str) -> str:
 # ===============================
 # Main answering entrypoint (JSON-in / JSON-out style)
 # ===============================
-def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_K) -> Dict[str, str]:
+def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_K) -> Dict[str, Any]:
     """
     Input:
     - question: user question
     - paragraph_history: a compact paragraph describing the history so far
 
     Output:
-      - question: original question (unchanged)
-      - answer: model answer (strictly from FAQ context)
-      - paragraph_history: updated compact history paragraph
+    - question: original question
+    - answer: model answer
+    - paragraph_history: updated compact history paragraph
     """
     question = normalize_q(question)
     paragraph_history = normalize_q(paragraph_history)
-
     lang = detect_lang(question or paragraph_history)
 
     if INDEX is None or EMBEDDER is None or not llm_is_available():
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
         updated_history = summarize_history_so_far(paragraph_history, question, msg)
-        return {"question": question, "answer": msg, "paragraph_history": updated_history}
+        return {
+            "question": question,
+            "answer": msg,
+            "paragraph_history": updated_history,
+        }
 
     # 1) Rewrite query using history paragraph (standalone question)
     rewritten_q = rewrite_query(question, paragraph_history)
@@ -817,15 +853,57 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
     if not passages:
         msg = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
         updated_history = summarize_history_so_far(paragraph_history, question, msg)
-        return {"question": question, "answer": msg, "paragraph_history": updated_history}
+        return {
+            "question": question,
+            "answer": msg,
+            "paragraph_history": updated_history,
+        }
 
     # 3) Generate strict FAQ answer
     msgs = build_faq_messages(rewritten_q, passages)
-    answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS).strip()
-    #answer = enforce_arabic_only(answer)
+    raw_answer = llm_chat(msgs, max_tokens=MAX_NEW_TOKENS)
+    answer = normalize_q(raw_answer)
+
     if lang == "ar":
         answer = enforce_arabic_only(answer)
+        answer = normalize_q(answer)
 
+    # If the LLM refuses even though retrieval found FAQ passages,
+    # use the top retrieved FAQ answer directly.
+    normalized_answer = (
+        normalize_q(answer)
+        .replace(".", "")
+        .replace("،", "")
+        .replace(":", "")
+        .replace('"', "")
+        .strip()
+    )
+    normalized_insufficient_ar = (
+        normalize_q(INSUFFICIENT_AR)
+        .replace(".", "")
+        .replace("،", "")
+        .replace(":", "")
+        .replace('"', "")
+        .strip()
+    )
+    normalized_insufficient_en = (
+        normalize_q(INSUFFICIENT_EN)
+        .lower()
+        .replace(".", "")
+        .replace(":", "")
+        .replace('"', "")
+        .strip()
+    )
+
+    is_insufficient_answer = (
+        normalized_answer == normalized_insufficient_ar
+        or normalized_answer.lower() == normalized_insufficient_en
+        or INSUFFICIENT_AR in answer
+        or INSUFFICIENT_EN.lower() in answer.lower()
+    )
+
+    if (not answer or is_insufficient_answer) and passages:
+        answer = passages[0].get("answer", "")
 
     if not answer:
         answer = INSUFFICIENT_AR if lang == "ar" else INSUFFICIENT_EN
@@ -833,15 +911,17 @@ def answer_with_json_io(question: str, paragraph_history: str, top_k: int = TOP_
     # 4) Update paragraph history summary with the ORIGINAL question + produced answer
     answer_for_history = preserve_entities(answer, passages)
     updated_history = summarize_history_so_far(paragraph_history, question, answer_for_history)
+
     return {
         "question": question,
         "answer": answer,
         "paragraph_history": updated_history,
         "_debug": {
             "rewritten": rewritten_q,
-            "retrieved_faq_ids": [p["faq_id"] for p in passages]
-        }
+            "retrieved_faq_ids": [p["faq_id"] for p in passages],
+        },
     }
+
 # ===============================
 # File helpers (JSON input/output)
 # ===============================
